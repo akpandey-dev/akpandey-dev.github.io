@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AKP Labs | Projects & Experiments</title>
+<style>
+* { box-sizing: border-box; }
+
+html, body {
+    overflow: scroll;
+    scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none; /* IE 10+ */
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+    display: none;             /* Chrome, Edge, Safari */
+}
+
+/* Hide scrollbars but allow scrolling */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #0b0f0b;
+    color: #d0ffd0;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: auto;
+}
+
+
+header {
+    text-align: center;
+    padding: 2rem 1rem;
+    background: #111;
+    border-bottom: 1px solid #222;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 2rem;
+}
+
+header img{
+    height: clamp(48px, 10vw, 96px);
+    width: clamp(48px, 10vw, 96px);
+    border-radius: 50%;
+    border: 1px solid black;
+}
+
+header div {
+    margin: 0.5rem 0 0;
+    font-size: 1rem;
+    color: #aaffaa;
+}
+
+#stats {
+    text-align: center;
+    padding: 1rem;
+}
+
+#stats img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 12px;
+}
+
+#repo-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+    padding: 1rem 1rem 2rem;
+    overflow: auto; /* allow scrolling */
+    scrollbar-width: none; /* Firefox */
+}
+
+#repo-container::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Edge */
+}
+
+.repo-card {
+    background: #111;
+    padding: 1rem;
+    border: 1px solid #222;
+    border-radius: 8px;
+    transition: transform 0.2s;
+    cursor: pointer;
+    word-break: break-word;
+}
+
+.repo-card:hover {
+    transform: scale(1.02);
+    border-color: #55ff55;
+}
+
+.repo-card h3 {
+    margin: 0 0 0.5rem;
+    font-size: clamp(1.0rem, 2.5vw, 1.2rem);
+}
+
+.repo-card h3 a {
+    color: #aaffaa;
+    text-decoration: none;
+}
+
+.repo-card p {
+    margin: 0.2rem 0;
+    font-size: clamp(0.8rem, 1.5vw, 0.85rem);
+    color: #b0ffb0;
+}
+
+.pages-link {
+    display: block;
+    margin-top: 0.3rem;
+    font-size: clamp(0.7rem, 1.2vw, 0.8rem);
+    color: #55ffaa;
+}
+
+footer {
+    text-align: center;
+    padding: 1rem;
+    border-top: 1px solid #222;
+    background: #111;
+    font-size: clamp(0.7rem, 1.2vw, 0.8rem);
+    color: #88ff88;
+}
+</style>
+</head>
+<body>
+
+<header>
+    <h1>AKP Labs</h1>
+    <img id="profile-pic" alt="GitHub Profile Picture" />
+    <div id="about-section"></div>
+</header>
+
+
+<div id="stats">  
+    <p>
+    Commit stats and contribution activity
+    </p>
+    <img alt="Cannot load stats" src="https://github-readme-stats.vercel.app/api?username=akp-labs&show_icons=true&include_all_commits=true" />
+    <img alt="Cannot load contribution graph" src="https://github-readme-streak-stats.herokuapp.com/?user=akp-labs" />
+</div>
+
+<main>
+    <div id="repo-container"></div>
+</main>
+
+<footer>
+    © <span id="year"></span> AKP Labs
+</footer>
+
+<script>
+const username = 'akp-labs';
+const container = document.getElementById('repo-container');
+
+document.getElementById('year').textContent = new Date().getFullYear();
+
+fetch(`https://api.github.com/users/${username}/repos`)
+.then(res => {
+    if (!res.ok) throw new Error('GitHub API error');
+    return res.json();
+})
+.then(repos => {
+    // Sort alphabetically by name
+    repos.sort((a, b) => a.name.localeCompare(b.name));
+
+    repos.forEach(repo => {
+        const card = document.createElement('div');
+        card.className = 'repo-card';
+
+        // Last updated date in YYYY-MM-DD
+        const updatedDate = new Date(repo.updated_at).toISOString().split('T')[0];
+
+        card.innerHTML = `
+            <h3>↗ <a href="${repo.html_url}" target="_blank" rel="noopener noreferrer">${repo.name}</a></h3>
+            <p>${repo.description || 'No description'}</p>
+            <p>⭐ ${repo.stargazers_count} | 🍴 ${repo.forks_count}</p>
+            <p>Last updated: ${updatedDate}</p>
+            ${repo.has_pages ? `<a class="pages-link" href="https://${username}.github.io/${repo.name}" target="_blank" rel="noopener noreferrer">🌐 Live Page</a>` : ''}
+        `;
+
+        // Confirmation popup before opening GitHub
+        card.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+            if(e.target.tagName.toLowerCase() !== 'a') {
+                const confirmOpen = confirm(`Open GitHub repo "${repo.name}"?`);
+                if(confirmOpen) window.open(repo.html_url, '_blank', 'noopener');
+            }
+        });
+
+        container.appendChild(card);
+    });
+})
+.catch(err => {
+    container.innerHTML = '<p style="grid-column:1/-1;text-align:center;">Failed to load repositories.</p>';
+    console.error(err);
+});
+
+
+// Fetch and display profile picture and other info
+fetch(`https://api.github.com/users/${username}`)
+  .then(res => res.json())
+  .then(data => {
+      // Set avatar
+      document.getElementById('profile-pic').src = data.avatar_url;
+
+      // Update about section with icons & colors
+      document.getElementById('about-section').innerHTML = `
+          <span style="font-style: italic; color: #aaffaa;">${data.bio || 'No bio available.'}</span><br>
+          <span style="color: #55ff55;">📦 ${data.public_repos} Repos</span> |
+          <span style="color: #88ff88;">👥 ${data.followers} Followers</span> |
+          <span style="color: #aaffaa;">➡️ ${data.following} Following</span>
+      `;
+  })
+  .catch(err => console.error('Failed to fetch GitHub profile', err));
+
+
+
+
+</script>
+
+</body>
+</html>
