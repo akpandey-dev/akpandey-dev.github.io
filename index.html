@@ -54,6 +54,25 @@ header div {
     font-size: 1rem;
     color: #aaffaa;
 }
+header .profile-section {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 10vw;
+}
+
+header a {
+    color: #55ff55;
+    text-decoration: none;
+    font-size: clamp(0.8rem, 1.5vw, 1rem);
+}
+
+header a:hover {
+    text-decoration: underline;
+    color: #4ad44a;
+}
 
 #stats {
     text-align: center;
@@ -131,7 +150,10 @@ footer {
 
 <header>
     <h1>AKP Labs</h1>
-    <img id="profile-pic" alt="GitHub Profile Picture" />
+    <div class="profile-section">
+        <img id="profile-pic" alt="GitHub Profile Picture" />
+        <a href="https://github.com/akp-labs" target="_blank" rel="noopener noreferrer">Visit GitHub Profile</a>
+    </div>
     <div id="about-section"></div>
 </header>
 
