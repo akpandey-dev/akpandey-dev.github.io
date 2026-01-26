@@ -151,8 +151,9 @@ footer {
 <header>
     <h1>AKP Labs</h1>
     <div class="profile-section">
+        <!-- Profile Picture and Github link here via JS -->
         <img id="profile-pic" alt="GitHub Profile Picture" />
-        <a href="https://github.com/akp-labs" target="_blank" rel="noopener noreferrer">Visit GitHub Profile</a>
+        <a target="_blank" rel="noopener noreferrer">Visit GitHub Profile</a>
     </div>
     <div id="about-section"></div>
 </header>
@@ -162,8 +163,8 @@ footer {
     <p>
     Commit stats and contribution activity
     </p>
-    <img alt="Cannot load stats" src="https://github-readme-stats.vercel.app/api?username=akp-labs&show_icons=true&include_all_commits=true" />
-    <img alt="Cannot load contribution graph" src="https://github-readme-streak-stats.herokuapp.com/?user=akp-labs" />
+    <img id="github-stats" alt="Cannot load stats" />
+    <img id="github-contributions" alt="Cannot load contribution graph" />
 </div>
 
 <main>
@@ -174,7 +175,24 @@ footer {
     © <span id="year"></span> AKP Labs
 </footer>
 
+
+
 <script>
+// Disable refresh entirely
+window.addEventListener('beforeunload', function(e) {
+    // Show a message if user tries to refresh
+    const msg = "🚫 Refresh is disabled on this page!";
+    
+    // This prevents reload/refresh
+    e.preventDefault();
+    e.returnValue = msg; // for some browsers
+    return msg;
+});
+</script>
+
+
+<script>
+
 const username = 'akp-labs';
 const container = document.getElementById('repo-container');
 
@@ -186,8 +204,16 @@ fetch(`https://api.github.com/users/${username}/repos`)
     return res.json();
 })
 .then(repos => {
-    // Sort alphabetically by name
+    // Sort alphabetically by name first
     repos.sort((a, b) => a.name.localeCompare(b.name));
+
+    // Push special repos to the end
+    const specialNames = ['akp-labs.github.io', 'akp-labs'];
+    repos.sort((a, b) => {
+        if (specialNames.includes(a.name)) return 1;
+        if (specialNames.includes(b.name)) return -1;
+        return 0;
+    });
 
     repos.forEach(repo => {
         const card = document.createElement('div');
@@ -201,6 +227,7 @@ fetch(`https://api.github.com/users/${username}/repos`)
             <p>${repo.description || 'No description'}</p>
             <p>⭐ ${repo.stargazers_count} | 🍴 ${repo.forks_count}</p>
             <p>Last updated: ${updatedDate}</p>
+            <p class="languages">Most used language: ${repo.language || 'Unknown'}</p>
             ${repo.has_pages ? `<a class="pages-link" href="https://${username}.github.io/${repo.name}" target="_blank" rel="noopener noreferrer">🌐 Live Page</a>` : ''}
         `;
 
@@ -214,6 +241,11 @@ fetch(`https://api.github.com/users/${username}/repos`)
         });
 
         container.appendChild(card);
+
+/*The language fetch here*/
+/*-----------------------*/
+/*==========Here=========*/
+
     });
 })
 .catch(err => {
@@ -228,6 +260,11 @@ fetch(`https://api.github.com/users/${username}`)
   .then(data => {
       // Set avatar
       document.getElementById('profile-pic').src = data.avatar_url;
+      // Set GitHub profile link
+      document.querySelector('header a').href = data.html_url;
+      // Set Github Stats 
+      document.getElementById('github-stats').src = `https://github-readme-stats.vercel.app/api?username=${username}&show_icons=true&include_all_commits=true&theme=dark`;
+      document.getElementById('github-contributions').src = `https://github-readme-streak-stats.herokuapp.com/?user=${username}&theme=dark`;
 
       // Update about section with icons & colors
       document.getElementById('about-section').innerHTML = `
@@ -241,7 +278,36 @@ fetch(`https://api.github.com/users/${username}`)
 
 
 
+/*
+The function below fetches the languages used in the repository and displays them in the card.
+It is currently commented out to avoid hitting Github API rate limits,
+ which is a common issue when fetching data for many repositories.
+*/
 
+/*
+fetch(repo.languages_url)
+  .then(res => res.json())
+  .then(languages => {
+      const total = Object.values(languages).reduce((a, b) => a + b, 0);
+
+      if (!total) {
+          card.querySelector(".languages").textContent = "🛠️ No code detected";
+          return;
+      }
+
+      const breakdown = Object.entries(languages)
+        .map(([lang, bytes]) => {
+            const percent = ((bytes / total) * 100).toFixed(1);
+            return `${lang} ${percent}%`;
+        })
+        .join(" · ");
+
+      card.querySelector(".languages").textContent = `🛠️ ${breakdown}`;
+  })
+  .catch(() => {
+      card.querySelector(".languages").textContent = "🛠️ Language data unavailable";
+  });
+*/
 </script>
 
 </body>
