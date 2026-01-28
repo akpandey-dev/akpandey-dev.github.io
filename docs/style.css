@@ -1,0 +1,140 @@
+
+* { box-sizing: border-box; }
+
+html, body {
+    overflow: scroll;
+    scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none; /* IE 10+ */
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+    display: none;             /* Chrome, Edge, Safari */
+}
+
+/* Hide scrollbars but allow scrolling */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #0b0f0b;
+    color: #d0ffd0;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: auto;
+}
+
+
+header {
+    text-align: center;
+    padding: 2rem 1rem;
+    background: #111;
+    border-bottom: 1px solid #222;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 2rem;
+}
+
+header img{
+    height: clamp(48px, 10vw, 96px);
+    width: clamp(48px, 10vw, 96px);
+    border-radius: 50%;
+    border: 1px solid black;
+}
+
+header div {
+    margin: 0.5rem 0 0;
+    font-size: 1rem;
+    color: #aaffaa;
+}
+header .profile-section {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 10vw;
+}
+
+header a {
+    color: #55ff55;
+    text-decoration: none;
+    font-size: clamp(0.8rem, 1.5vw, 1rem);
+}
+
+header a:hover {
+    text-decoration: underline;
+    color: #4ad44a;
+}
+
+#stats {
+    text-align: center;
+    padding: 1rem;
+}
+
+#stats img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 12px;
+}
+
+#repo-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+    padding: 1rem 1rem 2rem;
+    overflow: auto; /* allow scrolling */
+    scrollbar-width: none; /* Firefox */
+}
+
+#repo-container::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Edge */
+}
+
+.repo-card {
+    background: #111;
+    padding: 1rem;
+    border: 1px solid #222;
+    border-radius: 8px;
+    transition: transform 0.2s;
+    cursor: pointer;
+    word-break: break-word;
+}
+
+.repo-card:hover {
+    transform: scale(1.02);
+    border-color: #55ff55;
+}
+
+.repo-card h3 {
+    margin: 0 0 0.5rem;
+    font-size: clamp(1.0rem, 2.5vw, 1.2rem);
+}
+
+.repo-card h3 a {
+    color: #aaffaa;
+    text-decoration: none;
+}
+
+.repo-card p {
+    margin: 0.2rem 0;
+    font-size: clamp(0.8rem, 1.5vw, 0.85rem);
+    color: #b0ffb0;
+}
+
+.pages-link {
+    display: block;
+    margin-top: 0.3rem;
+    font-size: clamp(0.7rem, 1.2vw, 0.8rem);
+    color: #55ffaa;
+}
+
+footer {
+    text-align: center;
+    padding: 1rem;
+    border-top: 1px solid #222;
+    background: #111;
+    font-size: clamp(0.7rem, 1.2vw, 0.8rem);
+    color: #88ff88;
+}
