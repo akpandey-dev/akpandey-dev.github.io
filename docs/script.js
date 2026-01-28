@@ -2,6 +2,8 @@
 const username = 'akp-labs';
 const container = document.getElementById('repo-container');
 
+document.querySelector('header .detail-profile').innerHTML = `<a href="https://github.com/${username}/${username}" target="_blank" rel="noopener noreferrer">Take a look to the profile repository...</a>`;
+
 document.getElementById('year').textContent = new Date().getFullYear();
 
 fetch(`https://api.github.com/users/${username}/repos`)
@@ -68,6 +70,7 @@ fetch(`https://api.github.com/users/${username}`)
       document.getElementById('profile-pic').src = data.avatar_url;
       // Set GitHub profile link
       document.querySelector('header a').href = data.html_url;
+
       // Set Github Stats 
       document.getElementById('github-stats').src = `https://github-readme-stats.vercel.app/api?username=${username}&show_icons=true&include_all_commits=true&theme=dark`;
       document.getElementById('github-contributions').src = `https://github-readme-streak-stats.herokuapp.com/?user=${username}&theme=dark`;
