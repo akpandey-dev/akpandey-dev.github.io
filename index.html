@@ -94,6 +94,23 @@ header a:hover {
     scrollbar-width: none; /* Firefox */
 }
 
+@media (min-width: 500px) {
+    #repo-container {
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    }
+}
+@media (min-width: 800px) {
+    #repo-container {
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    }
+}
+@media (min-width: 1200px) {
+    #repo-container {
+        grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+    }
+}
+
+
 #repo-container::-webkit-scrollbar {
     display: none; /* Chrome, Safari, Edge */
 }
