@@ -27,6 +27,19 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        overflow: scroll;
+        scrollbar-width: none;
+    }
+    html::-webkit-scrollbar,
+    body::-webkit-scrollbar {
+        display: none;
+    }
+
+    .all-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
     }
 
     .panel {
@@ -37,10 +50,12 @@
         width: min(90%, 420px);
         box-shadow: 0 20px 60px rgba(0,0,0,.6);
         animation: float 4s ease-in-out infinite;
+        transition: opacity .3s ease;
     }
 
     h1 {
-        font-size: 5rem;
+        font-family: "Consolas", "Cascadia Code", monospace;
+        font-size: clamp(4rem, 16vw, 6rem);
         margin: 0;
         color: var(--accent);
         letter-spacing: 4px;
@@ -68,7 +83,7 @@
         transform: translateY(-2px);
     }
 
-    .counter {
+    .status {
         margin-top: 1rem;
         font-size: 0.85rem;
         color: var(--muted);
@@ -78,32 +93,111 @@
         0%,100% { transform: translateY(0); }
         50% { transform: translateY(-8px); }
     }
+
+    .button-container {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        margin-top: 1rem;
+    }
+    .button-container button {
+        width: 100%;
+    }
 </style>
 </head>
 <body>
 
-<div class="panel">
+<div class="all-container">
+<div class="panel" id="main-panel">
     <h1>404</h1>
     <p>
-        You found nothing.<br>
-        Which is impressive.
+        Well, this is awkward.<br>
+        Looks like this page took a vacation.
     </p>
 
-    <button id="poke">Poke the void</button>
-    <div class="counter" id="count">Void poked: 0 times</div>
+    <button id="navigate">I'm lost, show me the way</button>
+    <div class="status" id="status"></div>
+</div>
 </div>
 
 <script>
-    let pokes = 0;
-    const btn = document.getElementById("poke");
-    const count = document.getElementById("count");
+
+    const CONFIG ={
+        username: "akp-labs",
+        name : "Akp Labs",
+
+    }
+
+    const btn = document.getElementById("navigate");
+    const status = document.getElementById("status");
 
     btn.addEventListener("click", () => {
-        pokes++;
-        count.textContent = `Void poked: ${pokes} times`;
+        status.textContent = "Finding a way...";
 
-        btn.style.transform = `rotate(${(Math.random() * 6 - 3)}deg)`;
+        setTimeout(() => {
+            status.textContent = "Wait...";
+            setTimeout(() => {
+                redirectionOption();
+                
+            }, 500);
+        }, 1500);
     });
+
+    function toGithubProfile() {
+        window.location.href = `https://github.com/${CONFIG.username}`;
+    }
+
+    function toWebsite() {
+        window.location.href = `https://${CONFIG.username}.github.io`;
+    }
+
+    function toAnyRepository() {
+        const repo = prompt("Enter the repository name (without username):");
+        if (repo) {
+            const action = prompt(`Do you want to visit the repository or GitHub page for "${repo}"? (r/p)`);
+            if (action === "r") {
+                window.location.href = `https://github.com/${CONFIG.username}/${repo}`;
+            } else if (action === "p") {
+                window.location.href = `https://${CONFIG.username}.github.io/${repo}`;
+            } else {
+                alert("Invalid action. Please enter 'r' for repository or 'p' for website.");
+            }
+        } else {
+            alert("Please enter a valid repository name.");
+        }
+    }
+
+    function randomGame() {
+        window.alert("Sorry, no games available at the moment. Please check back later!");
+    }
+
+    function redirectionOption() {
+        const mainPanel = document.getElementById("main-panel");
+
+        mainPanel.style.opacity = "0";
+
+        setTimeout(() => {
+            mainPanel.style.display = "none";
+
+            const parent = document.getElementsByClassName("all-container")[0];
+            const redirectionPage = document.createElement("div");
+            redirectionPage.classList.add("panel");
+            redirectionPage.innerHTML = `
+            <h3>Where do you want to go?</h3>
+            <p>Choose your destination:</p>
+            <div class="button-container">
+                <button onclick="toGithubProfile()">GitHub Profile</button>
+                <button onclick="toWebsite()">Website</button>
+                <button onclick="toAnyRepository()">Any repository</button>
+                <button onclick="randomGame()">Play a game</button>
+            </div>
+        `;
+        parent.appendChild(redirectionPage);
+        }, 300);
+    }
+
+
+
 </script>
 
 </body>
