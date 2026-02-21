@@ -4,6 +4,7 @@
 ========================= */
 
 const CONFIG = {
+  name: "AKP Labs",
   username: "akp-labs",
   orgname: "apt-13",
   cacheTime: 1000 * 60 * 60 * 24 // 24 hours (less API stress)
@@ -17,6 +18,10 @@ const $ = id => document.getElementById(id);
 
 function setYear() {
   $("year").textContent = new Date().getFullYear();
+}
+
+function contactRedirect() {
+  document.querySelector("[data-page='contact']").click();
 }
 
 /* =========================
@@ -52,6 +57,7 @@ function setupSidebar() {
         .forEach(s => s.classList.remove("active"));
 
       $(link.dataset.page).classList.add("active");
+      window.scrollTo({ top: 0, behavior: "instant" });
       close();
     };
   });
@@ -314,6 +320,37 @@ function setupForm() {
 }
 
 /* =========================
+   NAME SETUP (MULTIPLE PLACES)
+========================= */
+
+function contentSetup() {
+  const nameHolders = document.querySelectorAll(".name-holder");
+  nameHolders.forEach(el => el.textContent = CONFIG.name || CONFIG.username);
+
+const aboutMe = $("about-me");
+if (aboutMe) {
+  aboutMe.textContent =`
+    I’m a curious developer who loves building things, breaking things, and learning how systems actually work from the inside. 
+    I’m deeply interested in programming, ethical hacking, and experimenting with new ideas — from web projects and automation tools to low-level concepts like assembly. 
+    I don't like to talk too much but I enjoy turning curiosity into real projects, exploring technology beyond the surface, and constantly pushing myself to learn something new every day. 
+    For me, coding isn’t just a skill — it’s how I try to explore the world.
+    `;
+  aboutMe.innerHTML += `<br><br>Feel free to explore my repositories and projects to see what I'm working on, and don't hesitate to <a href="#" onclick="contactRedirect()">reach out</a> if you want to collaborate! 
+    If you have any questions regarding my work or want to send a Pull Request on GitHub, you are more than welcome to do so.
+    <br><br><div style="font-style: italic; display: block; text-align: end;">-The mind behind ${CONFIG.name}</div>
+    `;
+  aboutMe.innerHTML += `<div style="margin-top: 20px; font-size: 14px; opacity: 0.8; text-align: center;border: 1px solid var(--border); padding: 10px; border-radius: 8px;" onmouseover="this.style.background='var(--border)'" onMouseOut="this.style.background='transparent'">
+                        <br><br>
+                        <h3>Support Me</h3><br>
+                        <p>If you like my work, you can support development.</p>
+                        <p>Consider starring my repositories you like on GitHub!</p>
+                        <br><br>
+                        </div>
+                       `;
+}
+}
+
+/* =========================
    INIT
 ========================= */
 
@@ -322,7 +359,7 @@ function init() {
   setupSidebar();
   setupTheme();
   setupForm();
-
+  contentSetup();
   loadProfile();
   loadRepos();
   setupProjects();

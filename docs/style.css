@@ -213,8 +213,10 @@ transition:.25s;
 }
 
 .repo-card:hover{
-transform:translateY(-5px);
+transform:translateY(-5px) scale(1.02);
 border-color:var(--accent);
+box-shadow:0 10px 30px rgba(0,255,120,.15);
+
 }
 
 .repo-card h3 a{
@@ -271,8 +273,10 @@ font-weight:bold;
 }
 
 .project-card:hover{
-  transform:translateY(-5px);
+  transform:translateY(-5px) scale(1.02);
   border-color:var(--accent);
+  box-shadow:0 10px 30px rgba(0,255,120,.15);
+
 }
 
 
