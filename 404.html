@@ -27,6 +27,19 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        overflow: scroll;
+        scrollbar-width: none;
+    }
+    html::-webkit-scrollbar,
+    body::-webkit-scrollbar {
+        display: none;
+    }
+
+    .all-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
     }
 
     .panel {
@@ -78,11 +91,22 @@
         0%,100% { transform: translateY(0); }
         50% { transform: translateY(-8px); }
     }
+
+    .button-container {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        margin-top: 1rem;
+    }
+    .button-container button {
+        width: 100%;
+    }
 </style>
 </head>
 <body>
 
-<div class="panel">
+<div class="all-container">
+<div class="panel" id="main-panel">
     <h1>404</h1>
     <p>
         You found nothing.<br>
@@ -90,20 +114,83 @@
     </p>
 
     <button id="poke">Poke the void</button>
-    <div class="counter" id="count">Void poked: 0 times</div>
+    <div class="counter" id="count"></div>
+</div>
 </div>
 
 <script>
-    let pokes = 0;
+
+    const CONFIG ={
+        username: "akp-labs",
+        name : "Akp Labs",
+
+    }
+    let poked = false;
     const btn = document.getElementById("poke");
     const count = document.getElementById("count");
 
     btn.addEventListener("click", () => {
-        pokes++;
-        count.textContent = `Void poked: ${pokes} times`;
+        poked = true;
+        count.textContent = "Void poked!";
 
-        btn.style.transform = `rotate(${(Math.random() * 6 - 3)}deg)`;
+        setTimeout(() => {
+            count.textContent = "Wait...";
+            setTimeout(() => {
+                redirectionOption();
+                
+            }, 500);
+        }, 1500);
     });
+
+    function toGithubProfile() {
+        window.location.href = `https://github.com/${CONFIG.username}`;
+    }
+
+    function toWebsite() {
+        window.location.href = `https://${CONFIG.username}.github.io`;
+    }
+
+    function toAnyRepository() {
+        const repo = prompt("Enter the repository name (without username):");
+        if (repo) {
+            const action = prompt(`Do you want to visit the repository or GitHub page for "${repo}"? (r/p)`);
+            if (action === "r") {
+                window.location.href = `https://github.com/${CONFIG.username}/${repo}`;
+            } else if (action === "p") {
+                window.location.href = `https://${CONFIG.username}.github.io/${repo}`;
+            } else {
+                alert("Invalid action. Please enter 'r' for repository or 'p' for website.");
+            }
+        } else {
+            alert("Please enter a valid repository name.");
+        }
+    }
+
+    function randomGame() {
+        window.alert("Sorry, no games available at the moment. Please check back later!");
+    }
+
+    function redirectionOption() {
+        document.getElementById("main-panel").style.display = "none";
+        const parent = document.getElementsByClassName("all-container")[0];
+        const redirectionPage = document.createElement("div");
+        redirectionPage.classList.add("panel");
+        redirectionPage.innerHTML =
+        `<h3>Where do you want to go?</h3>
+         <p>Choose your destination:</p>
+         <div class="button-container">
+         <button onclick="toGithubProfile()">GitHub Profile</button>
+         <button onclick="toWebsite()">Website</button>
+         <button onclick="toAnyRepository()">Any repository</button>
+         <button onclick="randomGame()">Play a game</button>
+         </div>
+        `;
+        parent.appendChild(redirectionPage);
+
+    }
+
+
+
 </script>
 
 </body>
