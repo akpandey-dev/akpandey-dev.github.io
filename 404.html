@@ -103,9 +103,10 @@
     }
 </style>
 </head>
+
 <body>
 
-<div class="all-container">
+<div class="all-container" id="container">
 <div class="panel" id="main-panel">
     <h1>404</h1>
     <p>
@@ -117,80 +118,117 @@
     <div class="counter" id="count"></div>
 </div>
 </div>
-
 <script>
+const CONFIG = {
+    username: "akp-labs",
+    name: "Akp Labs"
+};
 
-    const CONFIG ={
-        username: "akp-labs",
-        name : "Akp Labs",
+// ---------- DOM ----------
+const btn = document.getElementById("poke");
+const count = document.getElementById("count");
+const container = document.getElementById("container");
+const mainPanel = document.getElementById("main-panel");
 
-    }
-    let poked = false;
-    const btn = document.getElementById("poke");
-    const count = document.getElementById("count");
+// ---------- STATE ----------
+let isRedirectShown = false;
 
-    btn.addEventListener("click", () => {
-        poked = true;
-        count.textContent = "Void poked!";
 
-        setTimeout(() => {
-            count.textContent = "Wait...";
-            setTimeout(() => {
-                redirectionOption();
-                
-            }, 500);
-        }, 1500);
-    });
+// ---------- EVENTS ----------
+btn.addEventListener("click", handlePoke);
 
-    function toGithubProfile() {
-        window.location.href = `https://github.com/${CONFIG.username}`;
-    }
 
-    function toWebsite() {
-        window.location.href = `https://${CONFIG.username}.github.io`;
-    }
+// ---------- ACTIONS ----------
+function handlePoke() {
+    btn.disabled = true;
 
-    function toAnyRepository() {
-        const repo = prompt("Enter the repository name (without username):");
-        if (repo) {
-            const action = prompt(`Do you want to visit the repository or GitHub page for "${repo}"? (r/p)`);
-            if (action === "r") {
-                window.location.href = `https://github.com/${CONFIG.username}/${repo}`;
-            } else if (action === "p") {
-                window.location.href = `https://${CONFIG.username}.github.io/${repo}`;
-            } else {
-                alert("Invalid action. Please enter 'r' for repository or 'p' for website.");
-            }
-        } else {
-            alert("Please enter a valid repository name.");
-        }
-    }
+    count.textContent = "Void poked!";
 
-    function randomGame() {
-        window.alert("Sorry, no games available at the moment. Please check back later!");
+    setTimeout(() => {
+        count.textContent = "Wait...";
+        setTimeout(showRedirectionOptions, 500);
+    }, 1500);
+}
+
+
+// ---------- NAVIGATION ----------
+function toGithubProfile() {
+    window.location.href = `https://github.com/${CONFIG.username}`;
+}
+
+function toWebsite() {
+    window.location.href = `https://${CONFIG.username}.github.io`;
+}
+
+function toAnyRepository() {
+    const repo = prompt("Enter the repository name (without username):");
+
+    if (!repo) {
+        alert("Please enter a valid repository name.");
+        return;
     }
 
-    function redirectionOption() {
-        document.getElementById("main-panel").style.display = "none";
-        const parent = document.getElementsByClassName("all-container")[0];
-        const redirectionPage = document.createElement("div");
-        redirectionPage.classList.add("panel");
-        redirectionPage.innerHTML =
-        `<h3>Where do you want to go?</h3>
-         <p>Choose your destination:</p>
-         <div class="button-container">
-         <button onclick="toGithubProfile()">GitHub Profile</button>
-         <button onclick="toWebsite()">Website</button>
-         <button onclick="toAnyRepository()">Any repository</button>
-         <button onclick="randomGame()">Play a game</button>
-         </div>
-        `;
-        parent.appendChild(redirectionPage);
+    const action = prompt(
+        `Visit repository or GitHub page for "${repo}"? (r/p)`
+    );
 
+    if (action === "r") {
+        window.location.href = `https://github.com/${CONFIG.username}/${repo}`;
+    } 
+    else if (action === "p") {
+        window.location.href = `https://${CONFIG.username}.github.io/${repo}`;
+    } 
+    else {
+        alert("Invalid action. Enter 'r' or 'p'.");
     }
+}
+
+function randomGame() {
+    alert("Implementing soon! — " + CONFIG.name);
+}
 
 
+// ---------- UI ----------
+function showRedirectionOptions() {
+    if (isRedirectShown) return;
 
+    isRedirectShown = true;
+    mainPanel.style.display = "none";
+
+    const panel = document.createElement("div");
+    panel.className = "panel";
+    panel.id = "redirect-panel";
+
+    panel.innerHTML = `
+        <h3>Where do you want to go?</h3>
+        <p>Choose your destination:</p>
+
+        <div class="button-container">
+            <button id="githubBtn">GitHub Profile</button>
+            <button id="websiteBtn">Website</button>
+            <button id="repoBtn">Any repository</button>
+            <button id="gameBtn">Play a game</button>
+        </div>
+    `;
+
+    container.appendChild(panel);
+
+    document
+        .getElementById("githubBtn")
+        .addEventListener("click", toGithubProfile);
+
+    document
+        .getElementById("websiteBtn")
+        .addEventListener("click", toWebsite);
+
+    document
+        .getElementById("repoBtn")
+        .addEventListener("click", toAnyRepository);
+
+    document
+        .getElementById("gameBtn")
+        .addEventListener("click", randomGame);
+}
 </script>
 
 </body>
