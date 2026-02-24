@@ -6,6 +6,7 @@
 --text:#eaffea;
 --accent:#5dff5d;
 --border:rgba(120,255,120,.2);
+--glow:rgba(17, 236, 252, 0.5);
 }
 
 body.light{
@@ -14,6 +15,7 @@ body.light{
 --text:#111;
 --accent:#0a8f0a;
 --border:#ddd;
+--glow:rgba(35, 9, 165, 0.3);
 }
 
 *{margin:0;padding:0;box-sizing:border-box}
@@ -386,3 +388,58 @@ margin: 3px 0;
 text-decoration:underline;
 }
 
+/* ---------- NAME HOLDER GLOW ---------- */
+.name-holder {
+  color: inherit; /* take whatever color is already set */
+  transition: text-shadow 0.3s ease;
+  animation: glow-cycle 2.5s infinite alternate ease-in-out;
+}
+
+/* Hover glow intensifies */
+.name-holder:hover {
+  animation: glow-hover 1.5s infinite alternate ease-in-out;
+}
+
+/* Breathing/base glow animation */
+@keyframes glow-cycle {
+  0% {
+    text-shadow: 
+      0 0 2px var(--glow),
+      0 0 4px var(--glow);
+  }
+  50% {
+    text-shadow: 
+      0 0 4px var(--glow),
+      0 0 8px var(--glow);
+  }
+  100% {
+    text-shadow: 
+      0 0 2px var(--glow),
+      0 0 4px var(--glow);
+  }
+}
+
+/* Hover glow animation */
+@keyframes glow-hover {
+  0% {
+    text-shadow:
+      0 0 4px var(--glow),
+      0 0 8px var(--glow),
+      0 0 12px var(--glow),
+      0 0 16px var(--glow);
+  }
+  50% {
+    text-shadow:
+      0 0 6px var(--glow),
+      0 0 12px var(--glow),
+      0 0 18px var(--glow),
+      0 0 24px var(--glow);
+  }
+  100% {
+    text-shadow:
+      0 0 4px var(--glow),
+      0 0 8px var(--glow),
+      0 0 12px var(--glow),
+      0 0 16px var(--glow);
+  }
+}

@@ -324,8 +324,6 @@ function setupForm() {
 ========================= */
 
 function contentSetup() {
-  const nameHolders = document.querySelectorAll(".name-holder");
-  nameHolders.forEach(el => el.textContent = CONFIG.name || CONFIG.username);
 
 const aboutMe = $("about-me");
 if (aboutMe) {
@@ -337,7 +335,7 @@ if (aboutMe) {
     `;
   aboutMe.innerHTML += `<br><br>Feel free to explore my repositories and projects to see what I'm working on, and don't hesitate to <a href="#" onclick="contactRedirect()">reach out</a> if you want to collaborate! 
     If you have any questions regarding my work or want to send a Pull Request on GitHub, you are more than welcome to do so.
-    <br><br><div style="font-style: italic; display: block; text-align: end;">-The mind behind ${CONFIG.name}</div>
+    <br><br><div style="font-style: italic; display: block; text-align: end;">-The mind behind <span class="name-holder">${CONFIG.name}</span></div>
     `;
   aboutMe.innerHTML += `<div style="margin-top: 20px; font-size: 14px; opacity: 0.8; text-align: center;border: 1px solid var(--border); padding: 10px; border-radius: 8px;" onmouseover="this.style.background='var(--border)'" onMouseOut="this.style.background='transparent'">
                         <br><br>
@@ -346,8 +344,9 @@ if (aboutMe) {
                         <p>Consider starring my repositories you like on GitHub!</p>
                         <br><br>
                         </div>
-                       `;
+                    `;
 }
+
 }
 
 /* =========================
