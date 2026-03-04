@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>404 — Lost in the Void</title>
+
+<style>
+    :root {
+        --bg: #0b0f14;
+        --panel: #111826;
+        --text: #e6eaf2;
+        --muted: #8b93a7;
+        --accent: #7c9cff;
+    }
+
+    * {
+        box-sizing: border-box;
+        font-family: system-ui, monospace;
+    }
+
+    body {
+        margin: 0;
+        height: 100vh;
+        background: radial-gradient(circle at top, #121a2a, var(--bg));
+        color: var(--text);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: scroll;
+        scrollbar-width: none;
+    }
+    html::-webkit-scrollbar,
+    body::-webkit-scrollbar {
+        display: none;
+    }
+
+    .all-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+    }
+
+    .panel {
+        background: var(--panel);
+        padding: 2.5rem 2rem;
+        border-radius: 16px;
+        text-align: center;
+        width: min(90%, 420px);
+        box-shadow: 0 20px 60px rgba(0,0,0,.6);
+        animation: float 4s ease-in-out infinite;
+    }
+
+    h1 {
+        font-size: 5rem;
+        margin: 0;
+        color: var(--accent);
+        letter-spacing: 4px;
+    }
+
+    p {
+        margin: 0.5rem 0 1.5rem;
+        color: var(--muted);
+        line-height: 1.5;
+    }
+
+    button {
+        background: none;
+        border: 1px solid var(--accent);
+        color: var(--accent);
+        padding: 0.6rem 1.2rem;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all .2s ease;
+    }
+
+    button:hover {
+        background: var(--accent);
+        color: #000;
+        transform: translateY(-2px);
+    }
+
+    .counter {
+        margin-top: 1rem;
+        font-size: 0.85rem;
+        color: var(--muted);
+    }
+
+    @keyframes float {
+        0%,100% { transform: translateY(0); }
+        50% { transform: translateY(-8px); }
+    }
+
+    .button-container {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        margin-top: 1rem;
+    }
+    .button-container button {
+        width: 100%;
+    }
+</style>
+</head>
+
+<body>
+
+<div class="all-container" id="container">
+<div class="panel" id="main-panel">
+    <h1>404</h1>
+    <p>
+        You found nothing.<br>
+        Which is impressive, honestly.
+    </p>
+
+    <button id="poke">Poke the void</button>
+    <div class="counter" id="count"></div>
+</div>
+</div>
+<script>
+const CONFIG = {
+    username: "akp-labs",
+    name: "Akp Labs"
+};
+
+// ---------- DOM ----------
+const btn = document.getElementById("poke");
+const count = document.getElementById("count");
+const container = document.getElementById("container");
+const mainPanel = document.getElementById("main-panel");
+
+// ---------- STATE ----------
+let isRedirectShown = false;
+
+
+// ---------- EVENTS ----------
+btn.addEventListener("click", handlePoke);
+
+
+// ---------- ACTIONS ----------
+function handlePoke() {
+    btn.disabled = true;
+
+    count.textContent = "Void poked!";
+
+    setTimeout(() => {
+        count.textContent = "Wait...";
+        setTimeout(showRedirectionOptions, 500);
+    }, 1500);
+}
+
+
+// ---------- NAVIGATION ----------
+function toGithubProfile() {
+    window.location.href = `https://github.com/${CONFIG.username}`;
+}
+
+function toWebsite() {
+    window.location.href = `https://${CONFIG.username}.github.io`;
+}
+
+function toAnyRepository() {
+    const repo = prompt("Enter the repository name (without username):");
+
+    if (!repo) {
+        alert("Please enter a valid repository name.");
+        return;
+    }
+
+    const action = prompt(
+        `Visit repository or GitHub page for "${repo}"? (r/p)`
+    );
+
+    if (action === "r") {
+        window.location.href = `https://github.com/${CONFIG.username}/${repo}`;
+    } 
+    else if (action === "p") {
+        window.location.href = `https://${CONFIG.username}.github.io/${repo}`;
+    } 
+    else {
+        alert("Invalid action. Enter 'r' or 'p'.");
+    }
+}
+
+function randomGame() {
+    alert("Implementing soon! — " + CONFIG.name);
+}
+
+
+// ---------- UI ----------
+function showRedirectionOptions() {
+    if (isRedirectShown) return;
+
+    isRedirectShown = true;
+    mainPanel.style.display = "none";
+
+    const panel = document.createElement("div");
+    panel.className = "panel";
+    panel.id = "redirect-panel";
+
+    panel.innerHTML = `
+        <h3>Where do you want to go?</h3>
+        <p>Choose your destination:</p>
+
+        <div class="button-container">
+            <button id="githubBtn">GitHub Profile</button>
+            <button id="websiteBtn">Website</button>
+            <button id="repoBtn">Any repository</button>
+            <button id="gameBtn">Play a game</button>
+        </div>
+    `;
+
+    container.appendChild(panel);
+
+    document
+        .getElementById("githubBtn")
+        .addEventListener("click", toGithubProfile);
+
+    document
+        .getElementById("websiteBtn")
+        .addEventListener("click", toWebsite);
+
+    document
+        .getElementById("repoBtn")
+        .addEventListener("click", toAnyRepository);
+
+    document
+        .getElementById("gameBtn")
+        .addEventListener("click", randomGame);
+}
+</script>
+
+</body>
+</html>
