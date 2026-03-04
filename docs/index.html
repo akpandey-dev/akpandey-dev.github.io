@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AKP Labs</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div id="overlay" class="overlay"></div>
+
+<div class="app">
+
+<!-- SIDEBAR -->
+<div class="sidebar" id="sidebar">
+<h2 class="name-holder">AKP Labs</h2>
+
+<a data-page="home">Home</a>
+<a data-page="projects">Projects</a>
+<a data-page="repos">Repositories</a>
+<a data-page="about">About</a>
+<a data-page="contact">Contact</a>
+
+<hr style="margin:20px 0;border-color:var(--border)">
+
+<a id="theme-toggle" data-action="theme-toggle">Toggle Theme</a>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+
+
+<div id="sidebar-toggle" class="sidebar-toggle">
+    <div class="bar a"></div>
+    <div class="bar b"></div>
+    <div class="bar c"></div>
+</div>
+
+<header>
+<div class="topbar">
+<strong><span class="name-holder">AKP Labs</span> Dashboard</strong>
+  <div id="topbar-nav"></div>
+</div>
+</header>
+
+<div class="container">
+
+
+<section id="home" class="active">
+<div class="profile">
+<img id="avatar" alt="Avatar">
+<h1 class="name-holder">AKP Labs</h1>
+<div id="bio"></div>
+<br>
+<p>Github:</p>
+<p id="stats"></p>
+</div>
+</section>
+
+
+
+<section id="projects">
+  <h2>Projects</h2>
+  <br>
+  <h3>Projects I'm working on or will be working on soon and that are open source:</h3>
+
+  <!-- grid container -->
+  <div id="projects-container" class="project-grid">
+    <div class="project-card">Loading projects...</div>
+  </div>
+</section>
+
+
+
+<section id="repos">
+<h2>GitHub Repositories</h2>
+<div id="repo-container" class="repo-grid">Loading...</div>
+<div class="gist-reference">
+  <a id="gist-link" target="_blank" rel="noopener noreferrer">
+    <p>Also check out my GitHub Gists for smaller code snippets and experiments!</p>
+    </a>
+</div>
+</section>
+
+
+
+<section id="about">
+<h2>About Me</h2>
+<p class="paragraph" id="about-me">
+Loading...
+</p>
+<br>
+<h3>GitHub Stats:</h3>
+<div class="github-stats-container"><img alt="GitHub Stars" id="github-stats"></div>
+<div class="github-streak-container"><img alt="GitHub Streak" id="github-streak"></div>
+</section>
+
+
+
+<section id="contact">
+<h2>Contact Information</h2>
+<p class="paragraph" id="contact-information">
+Website: <a id="website-link" target="_blank" rel="noopener noreferrer">On GitHub Pages</a><br>
+GitHub: <a id="profile-link" target="_blank" rel="noopener noreferrer">Open Profile</a><br>
+GitHub Org: <a id="org-link" target="_blank" rel="noopener noreferrer">Open Profile</a><br>
+Email: ..........<br>
+Phone: ..........<br>
+</p><br>
+
+
+<h3>Contact me:</h3><br>
+
+<form id="form">
+  <!-- Web3Forms access key -->
+  <input type="hidden" name="access_key" value="b5b5cea3-baf9-47e6-8f5f-c44de3083a25">
+  <!-- Spam protection -->
+  <input type="checkbox" name="botcheck" style="display:none">
+  <input type="text" name="name" placeholder="Your Name" required>
+  <input type="email" name="email" placeholder="Your Email" required>
+  <textarea name="message" placeholder="Type your message..." required></textarea>
+  <button class="submit" type="submit">Submit</button>
+  <!-- status message -->
+  <p id="form-status" class="paragraph"></p>
+</form>
+</section>
+
+
+
+</div>
+
+<footer>© <span id="year"></span> <span class="name-holder">AKP Labs</span></footer>
+
+</div>
+</div>
+
+<script src="script.js">
+</script>
+
+</body>
+</html>

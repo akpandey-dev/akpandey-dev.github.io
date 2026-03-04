@@ -1,0 +1,1185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AKP Labs</title>
+
+<style>
+
+/* ---------- THEME ---------- */
+
+:root{
+--bg:#060416;
+--panel: #0b1022;
+--card:#141519;
+--text:#eaffea;
+--accent:#5d6dff;
+--border:rgba(49, 63, 82, 0.495);
+--glow:rgba(17, 236, 252, 0.785);
+--shadow:rgba(93, 109, 255, 0.25);
+
+  --topbar-height:64px;
+  --menu-offset:70px;
+}
+
+body.light{
+  --bg:#f4f6ff;              /* soft cool white, slight blue bias */
+  --panel:#e9edff;           /* subtle elevation */
+  --card:#ffffff;            /* clean surface */
+  --text:#0f1222;            /* deep navy instead of pure black */
+  --accent:#4c5cff;          /* slightly deeper blue for contrast */
+  --border:rgba(76, 92, 255, 0.25);
+  --glow:rgba(76, 92, 255, 0.35);
+  --shadow: rgba(30, 40, 90, 0.15);
+}
+
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+font-family:system-ui,-apple-system,"Segoe UI",sans-serif;
+background:var(--bg);
+color:var(--text);
+scrollbar-width:none;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar{display:none}
+
+
+/* ---------- LAYOUT ---------- */
+
+.app{
+display:flex;
+min-height:100vh;
+width:100%;
+}
+
+/* ---------- SIDEBAR (OVERLAY MODE) ---------- */
+
+.sidebar{
+position:fixed;
+top:0;
+left:0;
+height:100vh;
+width:240px;
+background: var(--bg);
+-webkit-backdrop-filter: blur(12px);
+backdrop-filter:blur(12px);
+border-right:1px solid var(--border);
+z-index:900;
+padding:20px;
+transform:translateX(-100%);
+transition:.3s ease;
+}
+
+.sidebar.open{
+transform:translateX(0);
+}
+
+.sidebar a{
+display:block;
+padding:12px;
+color:var(--text);
+text-decoration:none;
+border-radius:8px;
+margin-bottom:6px;
+cursor:pointer;
+}
+
+.sidebar a:hover{
+background:var(--border);
+}
+
+.sidebar h2{
+    margin-top: 30px;
+}
+
+/* ---------- BLUR OVERLAY ---------- */
+
+.overlay{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100vh;
+background: rgba(0,0,0,0.3);
+-webkit-backdrop-filter:blur(8px);
+backdrop-filter:blur(8px);
+opacity:0;
+pointer-events:none;
+transition:.3s ease;
+z-index:800;
+}
+
+.overlay.show{
+opacity:1;
+pointer-events:auto;
+}
+
+
+/* ---------- MAIN ---------- */
+
+.main{
+flex:1;
+width:100%;
+}
+
+/* ---------- TOPBAR ---------- */
+
+
+.topbar{
+position: fixed;
+top:0;
+z-index:100;
+box-shadow:0 0 15px var(--shadow);
+background-color: var(--panel);
+border-bottom:1px solid var(--border);
+height:var(--topbar-height);
+padding:15px 20px ;
+display:flex;
+align-items:center;
+gap:15px;
+width: 100%;
+
+}
+
+.topbar strong{
+margin-right: auto;
+white-space: nowrap;
+}
+
+.sidebar-toggle{
+  position:fixed;
+  left:20px;
+  top:calc(var(--topbar-height)/2);
+  transform:translateY(-50%);
+  z-index:1000;
+  width:32px;
+  height:24px;
+  display:none;
+  flex-direction:column;
+  justify-content:space-between;
+}
+
+
+.sidebar-toggle .bar{
+width:25px;
+height:3px;
+background:var(--text);
+margin: 3px 0;
+border-radius: 2px;
+transition: 0.3s;
+}
+
+.sidebar-toggle.active .bar.a{
+transform:translateY(8px) rotate(45deg);
+}
+
+.sidebar-toggle.active .bar.b{
+opacity:0;
+}
+
+.sidebar-toggle.active .bar.c{
+transform:translateY(-8px) rotate(-45deg);
+}
+
+
+
+#topbar-nav{
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 0;
+  width: 100%;
+  top: auto;
+  padding-left: 10%;
+}
+
+.topbar-nav-options{
+flex: 1;                     /* ← equal width for all */
+display: flex;               /* center text nicely */
+align-items: center;
+justify-content: center;
+padding: 10px;
+color:var(--text);
+text-decoration:none;
+border-radius:8px;
+cursor:pointer;
+font-size: clamp(0.9rem, 15px, 1.8vw);
+}
+
+/* TABLET */
+
+@media (max-width: 992px){
+ #topbar-nav{
+  display: none;
+ }
+ .sidebar-toggle{
+  display: flex;
+ }
+  .topbar{
+    padding:15px 20px 15px var(--menu-offset);
+  }
+  .topbar strong{
+    white-space: normal;
+  }
+}
+
+
+
+/* ---------- CONTENT ---------- */
+
+.container{
+width:100%;
+margin:auto;
+padding:30px clamp(16px,4vw,40px);
+padding-top: calc(var(--topbar-height) + 20px);
+}
+
+section {
+  opacity: 0;
+  transform: translateY(12px);
+  pointer-events: none;
+  visibility: hidden;
+  height: 0;
+  overflow: hidden;
+  transition: opacity 220ms ease, transform 220ms ease;
+}
+
+section.active {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+  visibility: visible;
+  height: auto;
+  overflow: visible;
+}
+
+
+/* ---------- PROFILE ---------- */
+
+.profile{text-align:center}
+
+.profile img{
+width:120px;
+border-radius:50%;
+border:3px solid var(--border);
+margin-bottom:10px;
+}
+
+/* ---------- REPO GRID ---------- */
+
+.repo-grid{
+margin-top:30px;
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+gap:20px;
+}
+
+@media (min-width: 500px) {
+    #repo-container {
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    }
+}
+@media (min-width: 800px) {
+    #repo-container {
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    }
+}
+@media (min-width: 1200px) {
+    #repo-container {
+        grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+    }
+}
+
+.repo-card{
+background:var(--card);
+border:1px solid var(--border);
+padding:20px;
+border-radius:14px;
+transition:.25s;
+}
+
+.repo-card:hover{
+transform:translateY(-5px) scale(1.02);
+border-color:var(--accent);
+box-shadow:0 10px 30px var(--shadow);
+
+}
+
+.repo-card h3 a{
+color:var(--accent);
+text-decoration:none;
+}
+
+.gist-reference{
+margin-top:20px;
+text-align:center;
+}
+
+#gist-link p{
+color:var(--accent);
+text-decoration:none;
+font-weight:bold;
+}
+
+/* ------ PROJECT GRID ------ */
+
+.project-grid{
+  margin-top:30px;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:20px;
+}
+
+
+@media (min-width:500px){
+  #projects-container{
+    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  }
+}
+
+@media (min-width:800px){
+  #projects-container{
+    grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+  }
+}
+
+@media (min-width:1200px){
+  #projects-container{
+    grid-template-columns:repeat(auto-fit,minmax(360px,1fr));
+  }
+}
+
+
+.project-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  padding:20px;
+  border-radius:14px;
+  transition:.25s;
+}
+
+.project-card:hover{
+  transform:translateY(-5px) scale(1.02);
+  border-color:var(--accent);
+  box-shadow:0 10px 30px var(--shadow);
+
+}
+
+
+.stage{
+  display:inline-block;
+  margin-top:10px;
+  padding:4px 10px;
+  font-size:12px;
+  border-radius:6px;
+  background:var(--border);
+}
+
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background: var(--border);
+  border-radius: 20px;
+  overflow: hidden;
+  margin-top: 10px;
+}
+
+.progress-fill {
+  height: 100%;
+  width: 0%;
+  background: var(--accent);
+  border-radius: 20px;
+  transition: width 0.4s ease;
+}
+
+/* ---------- ABOUT --------- */
+#github-stats,#github-streak{
+max-width:100%;
+height:auto;
+border-radius:12px;
+transition: transform 0.3s ease;
+}
+
+.github-stats-container,.github-streak-container{
+margin-top:20px;
+text-align:center;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+width: 100%;
+transition: transform 0.3s ease;
+}
+
+#github-stats:hover,#github-streak:hover{
+transform: translateY(-5px);
+box-shadow: 0 4px 12px var(--shadow);
+}
+
+/* ---------- FORM ---------- */
+
+form{
+max-width:500px;
+margin-top:20px;
+display:flex;
+flex-direction:column;
+gap:10px;
+}
+
+input,textarea{
+padding:12px;
+border-radius:8px;
+border:1px solid var(--border);
+background:var(--card);
+color:var(--text);
+}
+
+button.submit{
+background:var(--accent);
+border:none;
+padding:12px;
+border-radius:8px;
+cursor:pointer;
+}
+
+/* ---------- FOOTER ---------- */
+
+footer{
+text-align:center;
+padding:40px 0;
+opacity:.6;
+}
+
+.paragraph{margin-top:10px}
+
+#contact-information{
+margin-top:20px;
+border:1px solid var(--border);
+padding: 10px;
+transition: 0.3s ease;
+}
+#contact-information:hover{
+background:var(--border);
+}
+
+#contact-information a{
+color:var(--accent);
+text-decoration:none;
+margin: 3px 0;
+}
+
+#contact-information a:hover{
+text-decoration:underline;
+}
+
+/* ---------- NAME HOLDER GLOW ---------- */
+.name-holder {
+  color: inherit; /* take whatever color is already set */
+  transition: text-shadow 0.3s ease;
+  animation: glow-cycle 2.5s infinite alternate ease-in-out;
+}
+
+/* Hover glow intensifies */
+.name-holder:hover {
+  animation: glow-hover 1.5s infinite alternate ease-in-out;
+}
+
+/* Breathing/base glow animation */
+@keyframes glow-cycle {
+  0% {
+    text-shadow: 
+      0 0 2px var(--glow),
+      0 0 4px var(--glow);
+  }
+  50% {
+    text-shadow: 
+      0 0 4px var(--glow),
+      0 0 8px var(--glow);
+  }
+  100% {
+    text-shadow: 
+      0 0 2px var(--glow),
+      0 0 4px var(--glow);
+  }
+}
+
+/* Hover glow animation */
+@keyframes glow-hover {
+  0% {
+    text-shadow:
+      0 0 4px var(--glow),
+      0 0 8px var(--glow),
+      0 0 12px var(--glow),
+      0 0 16px var(--glow);
+  }
+  50% {
+    text-shadow:
+      0 0 6px var(--glow),
+      0 0 12px var(--glow),
+      0 0 18px var(--glow),
+      0 0 24px var(--glow);
+  }
+  100% {
+    text-shadow:
+      0 0 4px var(--glow),
+      0 0 8px var(--glow),
+      0 0 12px var(--glow),
+      0 0 16px var(--glow);
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div id="overlay" class="overlay"></div>
+
+<div class="app">
+
+<!-- SIDEBAR -->
+<div class="sidebar" id="sidebar">
+<h2 class="name-holder">AKP Labs</h2>
+
+<a data-page="home">Home</a>
+<a data-page="projects">Projects</a>
+<a data-page="repos">Repositories</a>
+<a data-page="about">About</a>
+<a data-page="contact">Contact</a>
+
+<hr style="margin:20px 0;border-color:var(--border)">
+
+<a id="theme-toggle" data-action="theme-toggle">Toggle Theme</a>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+
+
+<div id="sidebar-toggle" class="sidebar-toggle">
+    <div class="bar a"></div>
+    <div class="bar b"></div>
+    <div class="bar c"></div>
+</div>
+
+<header>
+<div class="topbar">
+<strong><span class="name-holder">AKP Labs</span> Dashboard</strong>
+  <div id="topbar-nav"></div>
+</div>
+</header>
+
+<div class="container">
+
+
+<section id="home" class="active">
+<div class="profile">
+<img id="avatar" alt="Avatar">
+<h1 class="name-holder">AKP Labs</h1>
+<div id="bio"></div>
+<br>
+<p>Github:</p>
+<p id="stats"></p>
+</div>
+</section>
+
+
+
+<section id="projects">
+  <h2>Projects</h2>
+  <br>
+  <h3>Projects I'm working on or will be working on soon and that are open source:</h3>
+
+  <!-- grid container -->
+  <div id="projects-container" class="project-grid">
+    <div class="project-card">Loading projects...</div>
+  </div>
+</section>
+
+
+
+<section id="repos">
+<h2>GitHub Repositories</h2>
+<div id="repo-container" class="repo-grid">Loading...</div>
+<div class="gist-reference">
+  <a id="gist-link" target="_blank" rel="noopener noreferrer">
+    <p>Also check out my GitHub Gists for smaller code snippets and experiments!</p>
+    </a>
+</div>
+</section>
+
+
+
+<section id="about">
+<h2>About Me</h2>
+<p class="paragraph" id="about-me">
+Loading...
+</p>
+<br>
+<h3>GitHub Stats:</h3>
+<div class="github-stats-container"><img alt="GitHub Stars" id="github-stats"></div>
+<div class="github-streak-container"><img alt="GitHub Streak" id="github-streak"></div>
+</section>
+
+
+
+<section id="contact">
+<h2>Contact Information</h2>
+<p class="paragraph" id="contact-information">
+Website: <a id="website-link" target="_blank" rel="noopener noreferrer">On GitHub Pages</a><br>
+GitHub: <a id="profile-link" target="_blank" rel="noopener noreferrer">Open Profile</a><br>
+GitHub Org: <a id="org-link" target="_blank" rel="noopener noreferrer">Open Profile</a><br>
+Email: ..........<br>
+Phone: ..........<br>
+</p><br>
+
+
+<h3>Contact me:</h3><br>
+
+<form id="form">
+  <!-- Web3Forms access key -->
+  <input type="hidden" name="access_key" value="b5b5cea3-baf9-47e6-8f5f-c44de3083a25">
+  <!-- Spam protection -->
+  <input type="checkbox" name="botcheck" style="display:none">
+  <input type="text" name="name" placeholder="Your Name" required>
+  <input type="email" name="email" placeholder="Your Email" required>
+  <textarea name="message" placeholder="Type your message..." required></textarea>
+  <button class="submit" type="submit">Submit</button>
+  <!-- status message -->
+  <p id="form-status" class="paragraph"></p>
+</form>
+</section>
+
+
+
+</div>
+
+<footer>© <span id="year"></span> <span class="name-holder">AKP Labs</span></footer>
+
+</div>
+</div>
+
+<script>
+
+/* =========================
+   CONFIG
+========================= */
+
+const CONFIG = {
+  name: "AKP Labs",
+  username: "akp-labs",
+  orgname: "apt-13",
+  cacheTime: 1000 * 60 * 60 * 24 // 24 hours (less API stress)
+};
+
+
+/* =========================
+   UTILITIES
+========================= */
+
+const $ = id => document.getElementById(id);
+
+function setYear() {
+  $("year").textContent = new Date().getFullYear();
+}
+
+function contactRedirect() {
+  document.querySelector("[data-page='contact']").click();
+}
+
+
+/* =========================
+   SIDEBAR + GLOBAL NAVIGATION
+========================= */
+function switchSection(targetId) {
+  const current = document.querySelector("section.active");
+  const next = document.getElementById(targetId);
+
+  if (!next || current === next) return;
+
+  if (current) current.classList.remove("active");
+  next.classList.add("active");
+}
+
+function setupNavigationSystem() {
+  const sidebar = document.getElementById("sidebar");
+  const overlay = document.getElementById("overlay");
+  const menuBtn = document.getElementById("sidebar-toggle");
+
+  if (!sidebar || !overlay || !menuBtn) return;
+
+  const open = () => {
+    sidebar.classList.add("open");
+    overlay.classList.add("show");
+    menuBtn.classList.add("active");
+
+  };
+
+  const close = () => {
+    sidebar.classList.remove("open");
+    overlay.classList.remove("show");
+    menuBtn.classList.remove("active");
+
+  };
+
+  /* menu toggle */
+  menuBtn.addEventListener("click", e => {
+    e.stopPropagation();
+    sidebar.classList.contains("open") ? close() : open();
+  });
+
+ overlay.addEventListener("click", close);
+
+  /* ESC closes */
+  document.addEventListener("keydown", e => {
+    if (e.key === "Escape") close();
+  });
+
+/* GLOBAL navigation handler (event delegation) */
+document.addEventListener("click", e => {
+  const link = e.target.closest("[data-page]");
+  if (!link) return;
+
+  const page = link.dataset.page;
+  if (!page) return;
+
+  switchSection(page);
+
+  window.scrollTo({ top: 0, behavior: "auto" });
+
+  close();
+});
+}
+
+/* =========================
+   THEME
+========================= */
+
+function toggleTheme() {
+  document.body.classList.toggle("light");
+
+  localStorage.setItem(
+    "theme",
+    document.body.classList.contains("light") ? "light" : "dark"
+  );
+}
+
+function setupTheme() {
+
+  // Load saved theme
+  if (localStorage.getItem("theme") === "light") {
+    document.body.classList.add("light");
+  }
+
+  // Global event delegation
+  document.addEventListener("click", (e) => {
+    const actionElement = e.target.closest("[data-action]");
+    if (!actionElement) return;
+
+    if (actionElement.dataset.action === "theme-toggle") {
+      toggleTheme();
+    }
+  });
+}
+
+
+/* =========================
+   SAFE FETCH + CACHE
+========================= */
+
+async function safeFetch(url) {
+  const res = await fetch(url);
+
+  if (!res.ok) {
+    throw new Error(`Request failed: ${res.status}`);
+  }
+
+  return res.json();
+}
+
+async function cachedFetch(key, url) {
+  const cached = localStorage.getItem(key);
+
+  // return valid cache
+  if (cached) {
+    const data = JSON.parse(cached);
+
+    if (Date.now() - data.time < CONFIG.cacheTime) {
+      return data.value;
+    }
+  }
+
+  // fetch fresh data
+  try {
+    const value = await safeFetch(url);
+
+    // prevent caching API error responses
+    if (value.message) {
+      throw new Error(value.message);
+    }
+
+    localStorage.setItem(
+      key,
+      JSON.stringify({
+        time: Date.now(),
+        value
+      })
+    );
+
+    return value;
+
+  } catch (err) {
+    console.error("Fetch failed:", err);
+
+    // fallback to old cache
+    if (cached) {
+      return JSON.parse(cached).value;
+    }
+
+    throw err;
+  }
+}
+
+
+/* =========================
+   PROFILE + ABOUT
+========================= */
+
+async function loadProfile() {
+  try {
+    const data = await cachedFetch(
+      "gh_user",
+      `https://api.github.com/users/${CONFIG.username}`
+    );
+
+    $("avatar").src = data.avatar_url;
+    $("bio").textContent = data.bio || "";
+
+    $("stats").textContent =
+      `📦 ${data.public_repos} Repositories · ` +
+      `👥 ${data.followers} Followers · ` +
+      `➡️ ${data.following} Following`;
+
+  } catch (err) {
+    console.error("Profile load failed:", err);
+  }
+
+  $("github-stats").src =
+    `https://img.shields.io/github/stars/${CONFIG.username}?style=flat&logo=github`;
+
+  $("github-streak").src =
+    `https://github-readme-streak-stats.herokuapp.com/?user=${CONFIG.username}&theme=dark`;
+
+  $("profile-link").href =
+    `https://github.com/${CONFIG.username}`;
+
+  $("org-link").href =
+    `https://github.com/${CONFIG.orgname}`;
+
+  $("website-link").href =
+    `https://${CONFIG.username}.github.io`;
+}
+
+
+/* =========================
+   REPOSITORIES
+========================= */
+
+function sortRepos(repos) {
+  const special = [
+    `${CONFIG.username}.github.io`,
+    CONFIG.username
+  ];
+
+  return repos.sort((a, b) => {
+    const ai = special.indexOf(a.name);
+    const bi = special.indexOf(b.name);
+
+    if (ai !== -1 || bi !== -1) {
+      if (ai === -1) return -1;
+      if (bi === -1) return 1;
+      return ai - bi;
+    }
+
+    return a.name.localeCompare(b.name);
+  });
+}
+
+async function loadRepos() {
+  const container = $("repo-container");
+
+  try {
+    const repos = await cachedFetch(
+      "gh_repos",
+      `https://api.github.com/users/${CONFIG.username}/repos`
+    );
+
+    container.innerHTML = "";
+
+    sortRepos(repos).forEach(repo => {
+      const updated =
+        new Date(repo.updated_at)
+          .toISOString()
+          .split("T")[0];
+
+      const card = document.createElement("div");
+      card.className = "repo-card";
+
+      card.innerHTML = `
+        <h3>
+          <a href="${repo.html_url}" target="_blank" rel="noopener noreferrer">
+            ${repo.name}
+          </a>
+        </h3>
+        <p>${repo.description || "No description"}</p>
+        <p>⭐ ${repo.stargazers_count} · 🍴 ${repo.forks_count}</p>
+        <p>🛠 ${repo.language || "Unknown"} · Updated ${updated}</p>
+        <p>Size: ${repo.size} KB</p>
+        ${
+          repo.has_pages
+            ? `<a class="pages-link" href="https://${CONFIG.username}.github.io/${repo.name}" target="_blank" rel="noopener noreferrer">🌐 Live Page</a>`
+            : ""
+        }
+      `;
+
+      container.appendChild(card);
+    });
+
+    document.getElementById("gist-link").href =
+      `https://gist.github.com/${CONFIG.username}`;
+
+  } catch (err) {
+    container.innerHTML =
+      "<div class='repo-card'>Failed to load repositories.</div>";
+  }
+}
+
+
+/* =========================
+   PROJECTS (JSON → UI)
+========================= */
+
+async function setupProjects() {
+  const container = $("projects-container");
+
+  try {
+    const projects = await safeFetch(
+      "https://gist.githubusercontent.com/akp-labs/dfbdbeb26f28fa95ab02bca603d43cd0/raw"
+    );
+
+    if (!Array.isArray(projects)) {
+      throw new Error("Invalid project format");
+    }
+
+    container.innerHTML = "";
+
+    projects.forEach(project => {
+      const progress =
+        Math.max(0, Math.min(100, project.progress || 0));
+
+      const card = document.createElement("div");
+      card.className = "project-card";
+
+      card.innerHTML = `
+        <h3>${project.name || "Untitled Project"}</h3>
+        <p>${project.description || "No description available"}</p>
+
+        ${
+          project.stage
+            ? `<span class="stage">${project.stage}</span>`
+            : ""
+        }
+
+        <div class="progress-bar">
+          <div class="progress-fill" style="width:${progress}%"></div>
+        </div>
+
+        <small>${progress}% complete (current stage)</small>
+        <small><br>Languages: ${
+          project.languages
+            ? project.languages.join(", ")
+            : "Unknown"
+        }</small>
+
+        <p>
+          <a href="${project.link}" target="_blank" rel="noopener noreferrer">
+            Check it out...
+          </a>
+        </p>
+      `;
+
+      container.appendChild(card);
+    });
+
+  } catch (err) {
+    console.error("Projects load failed:", err);
+
+    container.innerHTML =
+      "<div class='project-card'>Failed to load projects.</div>";
+  }
+}
+
+
+/* =========================
+   CONTACT FORM
+========================= */
+
+function setupForm() {
+  const form = $("form");
+  if (!form) return;
+
+  const submitBtn = form.querySelector("button");
+  const statusMsg = $("form-status");
+
+  form.addEventListener("submit", async e => {
+    e.preventDefault();
+
+    const formData = new FormData(form);
+    const originalText = submitBtn.textContent;
+
+    submitBtn.textContent = "Sending...";
+    submitBtn.disabled = true;
+    statusMsg.textContent = "";
+
+    try {
+      const res = await fetch(
+        "https://api.web3forms.com/submit",
+        {
+          method: "POST",
+          body: formData
+        }
+      );
+
+      const data = await res.json();
+
+      if (res.ok) {
+        statusMsg.textContent = "Message sent.";
+        statusMsg.style.color = "green";
+        form.reset();
+      } else {
+        statusMsg.textContent = data.message || "Failed.";
+        statusMsg.style.color = "red";
+      }
+
+    } catch {
+      statusMsg.textContent = "Network error.";
+      statusMsg.style.color = "red";
+    }
+
+    submitBtn.textContent = originalText;
+    submitBtn.disabled = false;
+  });
+}
+
+
+/* =========================
+   NAME SETUP (MULTIPLE PLACES)
+========================= */
+
+function contentSetup() {
+  const aboutMe = $("about-me");
+
+  if (aboutMe) {
+    aboutMe.textContent = `
+      I’m a curious developer who loves building things, breaking things, and learning how systems actually work from the inside. 
+      I’m deeply interested in programming, ethical hacking, and experimenting with new ideas — from web projects and automation tools to low-level concepts like assembly. 
+      I don't like to talk too much but I enjoy turning curiosity into real projects, exploring technology beyond the surface, and constantly pushing myself to learn something new every day. 
+      For me, coding isn’t just a skill — it’s how I try to explore the world.
+    `;
+
+    aboutMe.innerHTML += `
+      <br><br>
+      Feel free to explore my repositories and projects to see what I'm working on, and don't hesitate to 
+      <a href="#" onclick="contactRedirect()">reach out</a> if you want to collaborate! 
+      If you have any questions regarding my work or want to send a Pull Request on GitHub, you are more than welcome to do so.
+      <br><br>
+      <div style="font-style: italic; display: block; text-align: end;">
+        -The mind behind <span class="name-holder">${CONFIG.name}</span>
+      </div>
+    `;
+
+    aboutMe.innerHTML += `
+      <div style="
+        margin-top:20px;
+        font-size:14px;
+        opacity:0.8;
+        text-align:center;
+        border:1px solid var(--border);
+        padding:10px;
+        border-radius:8px;"
+        onmouseover="this.style.background='var(--border)'"
+        onMouseOut="this.style.background='transparent'">
+
+        <br><br>
+        <h3>Support Me</h3><br>
+        <p>If you like my work, you can support development.</p>
+        <p>Consider starring my repositories you like on GitHub!</p>
+        <br><br>
+      </div>
+    `;
+  }
+}
+
+/* =========================
+   NAV SYNC (SIDEBAR → TOPBAR)
+========================= */
+
+function syncNavigation() {
+  const sidebar = document.getElementById("sidebar");
+  const topbarNav = document.getElementById("topbar-nav");
+
+  if (!sidebar || !topbarNav) return;
+
+  /* clear previous links */
+  topbarNav.innerHTML = "";
+
+  /* clone sidebar navigation */
+  const navLinks = sidebar.querySelectorAll("[data-page]");
+
+  navLinks.forEach(link => {
+    const clone = link.cloneNode(true);
+
+    /* replace styling */
+    clone.className = "topbar-nav-options";
+
+    topbarNav.appendChild(clone);
+  });
+
+  const themeToggleLink = sidebar.querySelector("[data-action]");
+  const themeToggleClone = themeToggleLink.cloneNode(true);
+  themeToggleClone.className = "topbar-nav-options";
+  themeToggleClone.id = "topbar-theme-toggle";
+  topbarNav.appendChild(themeToggleClone);
+}
+
+/* =========================
+   INIT
+========================= */
+
+function init() {
+  setYear();
+  syncNavigation();
+  setupNavigationSystem();
+  setupTheme();
+  setupForm();
+  contentSetup();
+  loadProfile();
+  loadRepos();
+  setupProjects();
+}
+
+document.addEventListener("DOMContentLoaded", init);
+
+</script>
+
+</body>
+</html>
