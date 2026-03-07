@@ -27,14 +27,14 @@
 <meta property="og:description" content="Open-source projects, GitHub repositories, and developer experiments from AKP Labs.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://akp-labs.github.io/">
-<meta property="og:image" content="https://akp-labs.github.io/preview.png">
+<meta property="og:image" content="https://akp-labs.github.io/assets/icons/logo-1024.png">
 <meta property="og:site_name" content="AKP Labs">
 
 <!-- Twitter preview -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="AKP Labs">
 <meta name="twitter:description" content="Open-source projects and developer experiments from AKP Labs.">
-<meta name="twitter:image" content="https://akp-labs.github.io/preview.png">
+<meta name="twitter:image" content="https://akp-labs.github.io/assets/icons/logo-1024.png">
 
 <!-- Favicons -->
 <link rel="icon" href="/assets/icons/favicon.ico">
@@ -64,26 +64,26 @@
 :root{
 --bg:#060416;
 --panel: #0b1022;
---card:#141519;
+--card: #121a2e;
 --text:#eaffea;
---accent:#5d6dff;
---border:rgba(49, 63, 82, 0.495);
---glow:rgba(17, 236, 252, 0.785);
---shadow:rgba(93, 109, 255, 0.25);
+--accent:#34a5be;
+--border:rgba(35, 98, 129, 0.45);
+--glow:rgba(17, 236, 252, 0.6);
+--shadow:rgba(52,165,190,0.25);
 
   --topbar-height:64px;
   --menu-offset:70px;
 }
 
 body.light{
-  --bg:#f4f6ff;              /* soft cool white, slight blue bias */
-  --panel:#e9edff;           /* subtle elevation */
-  --card:#ffffff;            /* clean surface */
-  --text:#0f1222;            /* deep navy instead of pure black */
-  --accent:#4c5cff;          /* slightly deeper blue for contrast */
-  --border:rgba(76, 92, 255, 0.25);
-  --glow:rgba(76, 92, 255, 0.35);
-  --shadow: rgba(30, 40, 90, 0.15);
+--bg:#f3f8fa;                 /* cool soft white */
+--panel:#e9f1f7;              /* gentle elevation */
+--card:#ffffff;               /* main surface */
+--text:#0f1b24;               /* deep blue-black */
+--accent:#34a5be;             /* same accent as dark mode */
+--border:rgba(52, 165, 190, 0.381);
+--glow:rgba(52,165,190,0.35);
+--shadow:rgba(52,165,190,0.15);
 }
 
 
@@ -91,6 +91,7 @@ body.light{
 
 html{
     scroll-behavior:smooth;
+    overscroll-behavior-y: none;
 }
 
 body{
@@ -198,7 +199,7 @@ display:flex;
 align-items:center;
 gap:15px;
 width: 100%;
-
+  will-change: transform;
 }
 
 .topbar strong{
@@ -501,6 +502,11 @@ border:none;
 padding:12px;
 border-radius:8px;
 cursor:pointer;
+transition: 0.3s ease-in-out;
+}
+button.submit:hover{
+transform:translateY(-1px);
+box-shadow:0 6px 16px var(--shadow);
 }
 
 /* ---------- FOOTER ---------- */
