@@ -1,11 +1,10 @@
-
 /* ---------- THEME ---------- */
 
 :root{
 --bg:#060416;
 --panel: #0b1022;
 --card: #121a2e;
---text:#eaffea;
+--text:#eaf9ff;
 --accent:#34a5be;
 --border:rgba(35, 98, 129, 0.45);
 --glow:rgba(17, 236, 252, 0.6);
@@ -18,7 +17,7 @@
 body.light{
 --bg:#f3f8fa;                 /* cool soft white */
 --panel:#e9f1f7;              /* gentle elevation */
---card:#ffffff;               /* main surface */
+--card:#fbfcfc;               /* main surface */
 --text:#0f1b24;               /* deep blue-black */
 --accent:#34a5be;             /* same accent as dark mode */
 --border:rgba(52, 165, 190, 0.381);
@@ -477,6 +476,63 @@ margin: 3px 0;
 
 #contact-information a:hover{
 text-decoration:underline;
+}
+
+/* ---------- POPUP ---------- */
+
+#popup-box{
+      position:fixed;
+      top:50%;
+      left:50%;
+      transform:translate(-50%,-50%);
+      background:var(--panel);
+      border:1px solid var(--border);
+      padding:20px;
+      border-radius:12px;
+      max-width:400px;
+      width:90%;
+      box-shadow:0 10px 30px var(--shadow);
+      z-index:1000;
+      text-align:center;
+}
+
+#popup-btns-container{
+  margin-top:20px;
+  display:flex;
+  gap:10px;
+  justify-content:center
+}
+
+#popup-btns-container button{
+  flex: 1;
+  display:flex;
+  text-align: center;
+  align-items: center;
+  justify-content:center;
+  background-color: var(--accent);
+  border:1px solid var(--border);
+  border-radius: 4px;
+  padding: 4px;
+}
+
+.popup-overlay{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100vh;
+background: rgba(0,0,0,0.3);
+-webkit-backdrop-filter:blur(8px);
+backdrop-filter:blur(8px);
+opacity:0;
+pointer-events:none;
+transition:.3s ease;
+z-index:800;
+}
+
+.popup-overlay.show{
+opacity:1;
+pointer-events:auto;
 }
 
 /* ---------- NAME HOLDER GLOW ---------- */

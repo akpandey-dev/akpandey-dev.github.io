@@ -10,6 +10,7 @@
 <!-- Basic SEO -->
 <meta name="description" content="AKP Labs is a developer dashboard showcasing open-source projects, GitHub repositories, and experiments in programming, security, and system design.">
 <meta name="author" content="AKP Labs">
+<meta name="color-scheme" content="dark light">
 <meta name="robots" content="index, follow">
 
 <!-- Canonical URL -->
@@ -29,6 +30,8 @@
 <meta property="og:url" content="https://akp-labs.github.io/">
 <meta property="og:image" content="https://akp-labs.github.io/assets/icons/logo-1024.png">
 <meta property="og:site_name" content="AKP Labs">
+<meta property="og:image:width" content="1024">
+<meta property="og:image:height" content="1024">
 
 <!-- Twitter preview -->
 <meta name="twitter:card" content="summary_large_image">
@@ -84,6 +87,17 @@
 <!-- MAIN -->
 <div class="main">
 
+  
+<!-- CUSTOM POPUP -->
+<div id="popup-overlay" class="popup-overlay">
+  <div id="popup-box">
+    <p id="popup-message"></p>
+    <div id="popup-btns-container">
+      <button id="popup-ok">OK</button>
+      <button id="popup-cancel">Cancel</button>
+    </div>
+  </div>
+</div>
 
 
 <div id="sidebar-toggle" class="sidebar-toggle">
@@ -171,8 +185,8 @@ Phone: ..........<br>
   <input type="hidden" name="access_key" value="b5b5cea3-baf9-47e6-8f5f-c44de3083a25">
   <!-- Spam protection -->
   <input type="checkbox" name="botcheck" style="display:none">
-  <input type="text" name="name" placeholder="Your Name" required>
-  <input type="email" name="email" placeholder="Your Email" required>
+  <input type="text" name="name" autocomplete="name" placeholder="Your Name" required>
+  <input type="email" name="email" autocomplete="email" placeholder="Your Email" required>
   <textarea name="message" placeholder="Type your message..." required></textarea>
   <button class="submit" type="submit">Submit</button>
   <!-- status message -->

@@ -10,6 +10,7 @@
 <!-- Basic SEO -->
 <meta name="description" content="AKP Labs is a developer dashboard showcasing open-source projects, GitHub repositories, and experiments in programming, security, and system design.">
 <meta name="author" content="AKP Labs">
+<meta name="color-scheme" content="dark light">
 <meta name="robots" content="index, follow">
 
 <!-- Canonical URL -->
@@ -29,6 +30,8 @@
 <meta property="og:url" content="https://akp-labs.github.io/">
 <meta property="og:image" content="https://akp-labs.github.io/assets/icons/logo-1024.png">
 <meta property="og:site_name" content="AKP Labs">
+<meta property="og:image:width" content="1024">
+<meta property="og:image:height" content="1024">
 
 <!-- Twitter preview -->
 <meta name="twitter:card" content="summary_large_image">
@@ -65,7 +68,7 @@
 --bg:#060416;
 --panel: #0b1022;
 --card: #121a2e;
---text:#eaffea;
+--text:#eaf9ff;
 --accent:#34a5be;
 --border:rgba(35, 98, 129, 0.45);
 --glow:rgba(17, 236, 252, 0.6);
@@ -78,7 +81,7 @@
 body.light{
 --bg:#f3f8fa;                 /* cool soft white */
 --panel:#e9f1f7;              /* gentle elevation */
---card:#ffffff;               /* main surface */
+--card:#fbfcfc;               /* main surface */
 --text:#0f1b24;               /* deep blue-black */
 --accent:#34a5be;             /* same accent as dark mode */
 --border:rgba(52, 165, 190, 0.381);
@@ -539,6 +542,63 @@ margin: 3px 0;
 text-decoration:underline;
 }
 
+/* ---------- POPUP ---------- */
+
+#popup-box{
+      position:fixed;
+      top:50%;
+      left:50%;
+      transform:translate(-50%,-50%);
+      background:var(--panel);
+      border:1px solid var(--border);
+      padding:20px;
+      border-radius:12px;
+      max-width:400px;
+      width:90%;
+      box-shadow:0 10px 30px var(--shadow);
+      z-index:1000;
+      text-align:center;
+}
+
+#popup-btns-container{
+  margin-top:20px;
+  display:flex;
+  gap:10px;
+  justify-content:center
+}
+
+#popup-btns-container button{
+  flex: 1;
+  display:flex;
+  text-align: center;
+  align-items: center;
+  justify-content:center;
+  background-color: var(--accent);
+  border:1px solid var(--border);
+  border-radius: 4px;
+  padding: 4px;
+}
+
+.popup-overlay{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100vh;
+background: rgba(0,0,0,0.3);
+-webkit-backdrop-filter:blur(8px);
+backdrop-filter:blur(8px);
+opacity:0;
+pointer-events:none;
+transition:.3s ease;
+z-index:800;
+}
+
+.popup-overlay.show{
+opacity:1;
+pointer-events:auto;
+}
+
 /* ---------- NAME HOLDER GLOW ---------- */
 .name-holder {
   color: inherit; /* take whatever color is already set */
@@ -621,6 +681,17 @@ text-decoration:underline;
 <!-- MAIN -->
 <div class="main">
 
+  
+<!-- CUSTOM POPUP -->
+<div id="popup-overlay" class="popup-overlay">
+  <div id="popup-box">
+    <p id="popup-message"></p>
+    <div id="popup-btns-container">
+      <button id="popup-ok">OK</button>
+      <button id="popup-cancel">Cancel</button>
+    </div>
+  </div>
+</div>
 
 
 <div id="sidebar-toggle" class="sidebar-toggle">
@@ -708,8 +779,8 @@ Phone: ..........<br>
   <input type="hidden" name="access_key" value="b5b5cea3-baf9-47e6-8f5f-c44de3083a25">
   <!-- Spam protection -->
   <input type="checkbox" name="botcheck" style="display:none">
-  <input type="text" name="name" placeholder="Your Name" required>
-  <input type="email" name="email" placeholder="Your Email" required>
+  <input type="text" name="name" autocomplete="name" placeholder="Your Name" required>
+  <input type="email" name="email" autocomplete="email" placeholder="Your Email" required>
   <textarea name="message" placeholder="Type your message..." required></textarea>
   <button class="submit" type="submit">Submit</button>
   <!-- status message -->
@@ -758,6 +829,43 @@ function contactRedirect() {
   document.querySelector("[data-page='contact']").click();
 }
 
+function customAlert(message){
+  const overlay = document.getElementById("popup-overlay");
+  const msg = document.getElementById("popup-message");
+  const cancel = document.getElementById("popup-cancel");
+
+  msg.textContent = message;
+  cancel.style.display = "none";
+
+  overlay.classList.add("show");
+
+  document.getElementById("popup-ok").onclick = () => {
+    overlay.classList.remove("show");
+  };
+}
+
+function customConfirm(message){
+  return new Promise(resolve=>{
+    const overlay = document.getElementById("popup-overlay");
+    const msg = document.getElementById("popup-message");
+    const cancel = document.getElementById("popup-cancel");
+
+    msg.textContent = message;
+    cancel.style.display = "inline-block";
+
+    overlay.classList.add("show");
+
+    document.getElementById("popup-ok").onclick = ()=>{
+      overlay.classList.remove("show");
+      resolve(true);
+    };
+
+    cancel.onclick = ()=>{
+      overlay.classList.remove("show");
+      resolve(false);
+    };
+  });
+}
 
 /* =========================
    SIDEBAR + GLOBAL NAVIGATION
@@ -982,7 +1090,7 @@ async function loadRepos() {
   try {
     const repos = await cachedFetch(
       "gh_repos",
-      `https://api.github.com/users/${CONFIG.username}/repos`
+      `https://api.github.com/users/${CONFIG.username}/repos?per_page=100`
     );
 
     container.innerHTML = "";
@@ -999,7 +1107,7 @@ async function loadRepos() {
       card.innerHTML = `
         <h3>
           <a href="${repo.html_url}" target="_blank" rel="noopener noreferrer">
-            ${repo.name}
+            ⤤ ${repo.name}
           </a>
         </h3>
         <p>${repo.description || "No description"}</p>
@@ -1127,14 +1235,27 @@ function setupForm() {
         statusMsg.textContent = "Message sent.";
         statusMsg.style.color = "green";
         form.reset();
+        setTimeout(()=>{
+          statusMsg.textContent = '';
+          statusMsg.style.color = '';
+        }, 2000)
+        customAlert("✅Message sent successfully. Thanks for submission.")
       } else {
         statusMsg.textContent = data.message || "Failed.";
         statusMsg.style.color = "red";
+        setTimeout(()=>{
+          statusMsg.textContent = '';
+          statusMsg.style.color = '';
+        }, 5000)
       }
 
     } catch {
       statusMsg.textContent = "Network error.";
       statusMsg.style.color = "red";
+        setTimeout(()=>{
+          statusMsg.textContent = '';
+          statusMsg.style.color = '';
+        }, 5000)
     }
 
     submitBtn.textContent = originalText;
