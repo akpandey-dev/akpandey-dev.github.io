@@ -22,6 +22,43 @@ function contactRedirect() {
   document.querySelector("[data-page='contact']").click();
 }
 
+function customAlert(message){
+  const overlay = document.getElementById("popup-overlay");
+  const msg = document.getElementById("popup-message");
+  const cancel = document.getElementById("popup-cancel");
+
+  msg.textContent = message;
+  cancel.style.display = "none";
+
+  overlay.classList.add("show");
+
+  document.getElementById("popup-ok").onclick = () => {
+    overlay.classList.remove("show");
+  };
+}
+
+function customConfirm(message){
+  return new Promise(resolve=>{
+    const overlay = document.getElementById("popup-overlay");
+    const msg = document.getElementById("popup-message");
+    const cancel = document.getElementById("popup-cancel");
+
+    msg.textContent = message;
+    cancel.style.display = "inline-block";
+
+    overlay.classList.add("show");
+
+    document.getElementById("popup-ok").onclick = ()=>{
+      overlay.classList.remove("show");
+      resolve(true);
+    };
+
+    cancel.onclick = ()=>{
+      overlay.classList.remove("show");
+      resolve(false);
+    };
+  });
+}
 
 /* SIDEBAR + GLOBAL NAVIGATION */
 function switchSection(targetId) {
@@ -236,7 +273,7 @@ async function loadRepos() {
   try {
     const repos = await cachedFetch(
       "gh_repos",
-      `https://api.github.com/users/${CONFIG.username}/repos`
+      `https://api.github.com/users/${CONFIG.username}/repos?per_page=100`
     );
 
     container.innerHTML = "";
@@ -253,7 +290,7 @@ async function loadRepos() {
       card.innerHTML = `
         <h3>
           <a href="${repo.html_url}" target="_blank" rel="noopener noreferrer">
-            ${repo.name}
+            ⤤ ${repo.name}
           </a>
         </h3>
         <p>${repo.description || "No description"}</p>
@@ -377,14 +414,27 @@ function setupForm() {
         statusMsg.textContent = "Message sent.";
         statusMsg.style.color = "green";
         form.reset();
+        setTimeout(()=>{
+          statusMsg.textContent = '';
+          statusMsg.style.color = '';
+        }, 2000)
+        customAlert("✅Message sent successfully. Thanks for submission.")
       } else {
         statusMsg.textContent = data.message || "Failed.";
         statusMsg.style.color = "red";
+        setTimeout(()=>{
+          statusMsg.textContent = '';
+          statusMsg.style.color = '';
+        }, 5000)
       }
 
     } catch {
       statusMsg.textContent = "Network error.";
       statusMsg.style.color = "red";
+        setTimeout(()=>{
+          statusMsg.textContent = '';
+          statusMsg.style.color = '';
+        }, 5000)
     }
 
     submitBtn.textContent = originalText;
