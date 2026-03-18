@@ -8,7 +8,9 @@ const CONFIG = {
   name: "AKP Labs",
   username: "akp-labs",
   orgname: "apt-13",
-  cacheTime: 1000 * 60 * 60 * 24 // 24 hours (less API stress)
+  cacheTime: 1000 * 60 * 60 * 24, // 24 hours (less API stress)
+  projectGist:"https://gist.githubusercontent.com/akp-labs/dfbdbeb26f28fa95ab02bca603d43cd0/raw",
+  contactGist: "https://gist.githubusercontent.com/akp-labs/c4a37c78f289e7ea15139c90f3694405/raw"
 };
 
 
@@ -64,9 +66,11 @@ function customConfirm(message){
   });
 }
 
+
 /* =========================
    SIDEBAR + GLOBAL NAVIGATION
 ========================= */
+
 function switchSection(targetId) {
   const current = document.querySelector("section.active");
   const next = document.getElementById(targetId);
@@ -127,8 +131,40 @@ document.addEventListener("click", e => {
 });
 }
 
+/* =============================
+   NAV SYNC (SIDEBAR → TOPBAR)
+============================= */
+
+function syncNavigation() {
+  const sidebar = document.getElementById("sidebar");
+  const topbarNav = document.getElementById("topbar-nav");
+
+  if (!sidebar || !topbarNav) return;
+
+  /* clear previous links */
+  topbarNav.innerHTML = "";
+
+  /* clone sidebar navigation */
+  const navLinks = sidebar.querySelectorAll("[data-page]");
+
+  navLinks.forEach(link => {
+    const clone = link.cloneNode(true);
+
+    /* replace styling */
+    clone.className = "topbar-nav-options";
+
+    topbarNav.appendChild(clone);
+  });
+
+  const themeToggleLink = sidebar.querySelector("[data-action]");
+  const themeToggleClone = themeToggleLink.cloneNode(true);
+  themeToggleClone.className = "topbar-nav-options";
+  themeToggleClone.id = "topbar-theme-toggle";
+  topbarNav.appendChild(themeToggleClone);
+}
+
 /* =========================
-   THEME
+   THEME SETUP AND MANAGEMENT
 ========================= */
 
 function toggleTheme() {
@@ -221,6 +257,7 @@ async function cachedFetch(key, url) {
    PROFILE + ABOUT
 ========================= */
 
+/*Setup Profile Information*/
 async function loadProfile() {
   try {
     const data = await cachedFetch(
@@ -240,20 +277,120 @@ async function loadProfile() {
     console.error("Profile load failed:", err);
   }
 
+}
+
+/*Setup about section*/
+function aboutContentSetup() {
+  const aboutMe = $("about-me");
+
+  if (aboutMe) {
+    aboutMe.textContent = `
+      I’m a curious developer who loves building things, breaking things, and learning how systems actually work from the inside. 
+      I’m deeply interested in programming, ethical hacking, and experimenting with new ideas — from web projects and automation tools to low-level concepts like assembly. 
+      I don't like to talk too much but I enjoy turning curiosity into real projects, exploring technology beyond the surface, and constantly pushing myself to learn something new every day. 
+      For me, coding isn’t just a skill — it’s how I try to explore the world.
+    `;
+
+    aboutMe.innerHTML += `
+      <br><br>
+      Feel free to explore my repositories and projects to see what I'm working on, and don't hesitate to 
+      <a href="#" onclick="contactRedirect()">reach out</a> if you want to collaborate! 
+      If you have any questions regarding my work or want to send a Pull Request on GitHub, you are more than welcome to do so.
+      <br><br>
+      <div style="font-style: italic; display: block; text-align: end;">
+        -The mind behind <span class="name-holder">${CONFIG.name}</span>
+      </div>
+    `;
+
+    aboutMe.innerHTML += `
+      <div style="
+        margin-top:20px;
+        font-size:14px;
+        opacity:0.8;
+        text-align:center;
+        border:1px solid var(--border);
+        padding:10px;
+        border-radius:8px;"
+        onmouseover="this.style.background='var(--border)'"
+        onMouseOut="this.style.background='transparent'">
+
+        <br><br>
+        <h3>Support Me</h3><br>
+        <p>If you like my work, you can support development.</p>
+        <p>Consider starring my repositories you like on GitHub!</p>
+        <br><br>
+      </div>
+    `;
+  }
   $("github-stats").src =
     `https://img.shields.io/github/stars/${CONFIG.username}?style=flat&logo=github`;
 
   $("github-streak").src =
     `https://github-readme-streak-stats.herokuapp.com/?user=${CONFIG.username}&theme=dark`;
+}
 
-  $("profile-link").href =
-    `https://github.com/${CONFIG.username}`;
+/* =========================
+   PROJECTS (JSON → UI)
+========================= */
 
-  $("org-link").href =
-    `https://github.com/${CONFIG.orgname}`;
+async function setupProjects() {
+  const container = $("projects-container");
 
-  $("website-link").href =
-    `https://${CONFIG.username}.github.io`;
+  try {
+    const projects = await safeFetch(
+      `${CONFIG.projectGist}`
+    );
+
+    if (!Array.isArray(projects)) {
+      throw new Error("Invalid project format");
+    }
+
+    container.innerHTML = "";
+
+    projects.forEach(project => {
+      const progress =
+        Math.max(0, Math.min(100, project.progress || 0));
+
+      const card = document.createElement("div");
+      card.className = "project-card";
+
+      card.innerHTML = `
+        <h3>${project.name || "Untitled Project"}</h3>
+        <p>${project.description || "No description available"}</p>
+
+        ${
+          project.stage
+            ? `<span class="stage">${project.stage}</span>`
+            : ""
+        }
+
+        <div class="progress-bar">
+          <div class="progress-fill" style="width:${progress}%"></div>
+        </div>
+
+        <small>${progress}% complete (current stage)</small>
+        <small><br>Languages: ${
+          project.languages
+            ? project.languages.join(", ")
+            : "Unknown"
+        }</small>
+
+        <p>
+          <a href="${project.link}" target="_blank" rel="noopener noreferrer">
+            Check it out...
+          </a>
+        </p>
+      `;
+
+      container.appendChild(card);
+    });
+
+  } catch (err) {
+    console.error("Projects load failed:", err);
+
+    container.innerHTML =
+      "<div class='project-card'>Failed to load projects.</div>";
+  }
 }
 
 
@@ -330,76 +467,67 @@ async function loadRepos() {
   }
 }
 
+/* ==================================
+  CONTACT INFORMATION AND FORM SETUP
+================================== */
 
-/* =========================
-   PROJECTS (JSON → UI)
-========================= */
-
-async function setupProjects() {
-  const container = $("projects-container");
+/*Contact Information Setup*/
+async function loadContact() {
+  const container = $("contact-information");
 
   try {
-    const projects = await safeFetch(
-      "https://gist.githubusercontent.com/akp-labs/dfbdbeb26f28fa95ab02bca603d43cd0/raw"
-    );
+    const data = await safeFetch(CONFIG.contactGist);
+    const list = data["contact-information"];
 
-    if (!Array.isArray(projects)) {
-      throw new Error("Invalid project format");
+    if (!Array.isArray(list)) {
+      throw new Error("Invalid contact format");
     }
 
-    container.innerHTML = "";
+    container.innerHTML = ""; // clear old
 
-    projects.forEach(project => {
-      const progress =
-        Math.max(0, Math.min(100, project.progress || 0));
+    const safeAttrs = ["href", "target", "rel", "title"];
 
-      const card = document.createElement("div");
-      card.className = "project-card";
+    list.forEach(item => {
+      // handle line breaks
+      if (item.tag === "br") {
+        container.appendChild(document.createElement("br"));
+        return;
+      }
 
-      card.innerHTML = `
-        <h3>${project.name || "Untitled Project"}</h3>
-        <p>${project.description || "No description available"}</p>
+      const wrapper = document.createElement("div");
+      wrapper.className = "contact-row";
 
-        ${
-          project.stage
-            ? `<span class="stage">${project.stage}</span>`
-            : ""
-        }
+      // label (safe)
+      if (item.label) {
+        const label = document.createElement("span");
+        label.textContent = item.label + ": ";
+        wrapper.appendChild(label);
+      }
 
-        <div class="progress-bar">
-          <div class="progress-fill" style="width:${progress}%"></div>
-        </div>
+      // element
+      const el = document.createElement(item.tag || "span");
+      el.textContent = item.text || "";
 
-        <small>${progress}% complete (current stage)</small>
-        <small><br>Languages: ${
-          project.languages
-            ? project.languages.join(", ")
-            : "Unknown"
-        }</small>
+      // secure attribute application
+      if (item.attrs) {
+        Object.entries(item.attrs).forEach(([key, value]) => {
+          if (safeAttrs.includes(key)) {
+            el.setAttribute(key, value);
+          }
+        });
+      }
 
-        <p>
-          <a href="${project.link}" target="_blank" rel="noopener noreferrer">
-            Check it out...
-          </a>
-        </p>
-      `;
-
-      container.appendChild(card);
+      wrapper.appendChild(el);
+      container.appendChild(wrapper);
     });
 
   } catch (err) {
-    console.error("Projects load failed:", err);
-
-    container.innerHTML =
-      "<div class='project-card'>Failed to load projects.</div>";
+    console.error("Dynamic contact load failed:", err);
+    container.textContent = "Failed to load contact info.";
   }
 }
 
-
-/* =========================
-   CONTACT FORM
-========================= */
-
+/*Contact Form setup*/
 function setupForm() {
   const form = $("form");
   if (!form) return;
@@ -462,87 +590,7 @@ function setupForm() {
 
 
 /* =========================
-   NAME SETUP (MULTIPLE PLACES)
-========================= */
-
-function contentSetup() {
-  const aboutMe = $("about-me");
-
-  if (aboutMe) {
-    aboutMe.textContent = `
-      I’m a curious developer who loves building things, breaking things, and learning how systems actually work from the inside. 
-      I’m deeply interested in programming, ethical hacking, and experimenting with new ideas — from web projects and automation tools to low-level concepts like assembly. 
-      I don't like to talk too much but I enjoy turning curiosity into real projects, exploring technology beyond the surface, and constantly pushing myself to learn something new every day. 
-      For me, coding isn’t just a skill — it’s how I try to explore the world.
-    `;
-
-    aboutMe.innerHTML += `
-      <br><br>
-      Feel free to explore my repositories and projects to see what I'm working on, and don't hesitate to 
-      <a href="#" onclick="contactRedirect()">reach out</a> if you want to collaborate! 
-      If you have any questions regarding my work or want to send a Pull Request on GitHub, you are more than welcome to do so.
-      <br><br>
-      <div style="font-style: italic; display: block; text-align: end;">
-        -The mind behind <span class="name-holder">${CONFIG.name}</span>
-      </div>
-    `;
-
-    aboutMe.innerHTML += `
-      <div style="
-        margin-top:20px;
-        font-size:14px;
-        opacity:0.8;
-        text-align:center;
-        border:1px solid var(--border);
-        padding:10px;
-        border-radius:8px;"
-        onmouseover="this.style.background='var(--border)'"
-        onMouseOut="this.style.background='transparent'">
-
-        <br><br>
-        <h3>Support Me</h3><br>
-        <p>If you like my work, you can support development.</p>
-        <p>Consider starring my repositories you like on GitHub!</p>
-        <br><br>
-      </div>
-    `;
-  }
-}
-
-/* =========================
-   NAV SYNC (SIDEBAR → TOPBAR)
-========================= */
-
-function syncNavigation() {
-  const sidebar = document.getElementById("sidebar");
-  const topbarNav = document.getElementById("topbar-nav");
-
-  if (!sidebar || !topbarNav) return;
-
-  /* clear previous links */
-  topbarNav.innerHTML = "";
-
-  /* clone sidebar navigation */
-  const navLinks = sidebar.querySelectorAll("[data-page]");
-
-  navLinks.forEach(link => {
-    const clone = link.cloneNode(true);
-
-    /* replace styling */
-    clone.className = "topbar-nav-options";
-
-    topbarNav.appendChild(clone);
-  });
-
-  const themeToggleLink = sidebar.querySelector("[data-action]");
-  const themeToggleClone = themeToggleLink.cloneNode(true);
-  themeToggleClone.className = "topbar-nav-options";
-  themeToggleClone.id = "topbar-theme-toggle";
-  topbarNav.appendChild(themeToggleClone);
-}
-
-/* =========================
-   INIT
+   INIT -> FUNCTION INVOCATIONS
 ========================= */
 
 function init() {
@@ -551,11 +599,11 @@ function init() {
   setupNavigationSystem();
   setupTheme();
   setupForm();
-  contentSetup();
+  aboutContentSetup();
   loadProfile();
   loadRepos();
   setupProjects();
+  loadContact();
 }
 
 document.addEventListener("DOMContentLoaded", init);
-
