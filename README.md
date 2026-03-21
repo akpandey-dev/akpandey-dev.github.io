@@ -1,6 +1,6 @@
 # akp-labs.github.io
 
-Personal portfolio site for **AKP Labs**, built to showcase projects, experiments, and tools dynamically using the GitHub API.
+My personal portfolio site, built to showcase projects, experiments, and tools dynamically using the GitHub API.
 
 This site is intentionally simple. No frameworks, no build step, no artificial polish.  
 The goal is clarity, honesty, and direct access to real work.

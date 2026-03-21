@@ -5,9 +5,8 @@
 ========================= */
 
 const CONFIG = {
-  name: "AKP Labs",
+  name: "AK Pandey",
   username: "akp-labs",
-  orgname: "apt-13",
   cacheTime: 1000 * 60 * 60 * 24, // 24 hours (less API stress)
   projectGist:"https://gist.githubusercontent.com/akp-labs/dfbdbeb26f28fa95ab02bca603d43cd0/raw",
   contactGist: "https://gist.githubusercontent.com/akp-labs/c4a37c78f289e7ea15139c90f3694405/raw"
@@ -298,7 +297,7 @@ function aboutContentSetup() {
       If you have any questions regarding my work or want to send a Pull Request on GitHub, you are more than welcome to do so.
       <br><br>
       <div style="font-style: italic; display: block; text-align: end;">
-        -The mind behind <span class="name-holder">${CONFIG.name}</span>
+        -<span class="name-holder">${CONFIG.name}</span>
       </div>
     `;
 
