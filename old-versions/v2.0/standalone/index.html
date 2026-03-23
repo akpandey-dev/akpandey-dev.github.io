@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AKP Labs</title>
+<title>AK Pandey</title>
 
 <style>
 
@@ -463,7 +463,7 @@ text-decoration:underline;
 
 <!-- SIDEBAR -->
 <div class="sidebar" id="sidebar">
-<h2 class="name-holder">AKP Labs</h2>
+<h2 class="name-holder">AK Pandey</h2>
 
 <a data-page="home">Home</a>
 <a data-page="projects">Projects</a>
@@ -486,7 +486,7 @@ text-decoration:underline;
 </div>
 
 <div class="topbar">
-<strong><span class="name-holder">AKP Labs</span> Dashboard</strong>
+<strong><span class="name-holder">AK Pandey</span> Dashboard</strong>
 </div>
 
 <div class="container">
@@ -495,7 +495,7 @@ text-decoration:underline;
 <section id="home" class="active">
 <div class="profile">
 <img id="avatar" alt="Avatar">
-<h1 class="name-holder">AKP Labs</h1>
+<h1 class="name-holder">AK Pandey</h1>
 <div id="bio"></div>
 <br>
 <p>Github:</p>
@@ -574,7 +574,7 @@ Phone: ..........<br>
 
 </div>
 
-<footer>© <span id="year"></span> <span class="name-holder">AKP Labs</span></footer>
+<footer>© <span id="year"></span> <span class="name-holder">AK Pandey</span></footer>
 
 </div>
 </div>
@@ -586,8 +586,8 @@ Phone: ..........<br>
 ========================= */
 
 const CONFIG = {
-  name: "AKP Labs",
-  username: "akp-labs",
+  name: "AK Pandey",
+  username: "akpandey-dev",
   orgname: "apt-13",
   cacheTime: 1000 * 60 * 60 * 24 // 24 hours (less API stress)
 };
@@ -815,7 +815,7 @@ async function setupProjects() {
 
   try {
     // local file OR gist URL both work
-    const projects = await safeFetch("https://gist.githubusercontent.com/akp-labs/dfbdbeb26f28fa95ab02bca603d43cd0/raw");
+    const projects = await safeFetch("https://gist.githubusercontent.com/akpandey-dev/dfbdbeb26f28fa95ab02bca603d43cd0/raw");
     if (!Array.isArray(projects)) throw new Error("Invalid project format");
 
     container.innerHTML = "";

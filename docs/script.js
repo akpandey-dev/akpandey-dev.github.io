@@ -6,10 +6,10 @@
 
 const CONFIG = {
   name: "AK Pandey",
-  username: "akp-labs",
+  username: "akpandey-dev",
   cacheTime: 1000 * 60 * 60 * 24, // 24 hours (less API stress)
-  projectGist:"https://gist.githubusercontent.com/akp-labs/dfbdbeb26f28fa95ab02bca603d43cd0/raw",
-  contactGist: "https://gist.githubusercontent.com/akp-labs/c4a37c78f289e7ea15139c90f3694405/raw"
+  projectGist:"https://gist.githubusercontent.com/akpandey-dev/dfbdbeb26f28fa95ab02bca603d43cd0/raw",
+  contactGist: "https://gist.githubusercontent.com/akpandey-dev/c4a37c78f289e7ea15139c90f3694405/raw"
 };
 
 

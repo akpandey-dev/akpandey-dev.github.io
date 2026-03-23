@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://akp-labs.github.io/sitemap.xml
+Sitemap: https://akpandey-dev.github.io/sitemap.xml

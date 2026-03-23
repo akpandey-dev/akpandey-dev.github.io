@@ -1,5 +1,5 @@
 
-const username = 'akp-labs';
+const username = 'akpandey-dev';
 const container = document.getElementById('repo-container');
 
 document.querySelector('header .detail-profile').innerHTML = `<a href="https://github.com/${username}/${username}" target="_blank" rel="noopener noreferrer">Take a look to the profile repository...</a>`;
@@ -91,7 +91,7 @@ fetch(`https://api.github.com/users/${username}`)
       document.getElementById('github-stats').src = `https://img.shields.io/github/stars/${username}?style=flat&logo=github`;
       document.getElementById('github-contributions').src = `https://github-readme-streak-stats.herokuapp.com/?user=${username}&theme=dark`;
 
-      // Earlier used: https://github-readme-stats.vercel.app/api?username=akp-labs&show_icons=true&include_all_commits=true&theme=dark
+      // Earlier used: https://github-readme-stats.vercel.app/api?username=akpandey-dev&show_icons=true&include_all_commits=true&theme=dark
 
       // Update about section with icons & colors
       document.getElementById('about-section').innerHTML = `
