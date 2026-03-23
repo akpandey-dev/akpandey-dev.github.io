@@ -5,3 +5,5 @@ It exists to preserve progress, allowing anyone to explore how the project evolv
 
 The repository’s main license may not apply to files in this folder.
 All archived code here is provided under the **MIT License** and may be used freely for personal or educational purposes.
+
+> **Important:** Files in `v1.0` and `v2.0` are overwritten once to maintain consistency with new versions.

@@ -2,8 +2,8 @@
 /* CONFIG */
 
 const CONFIG = {
-  name: "AKP Labs",
-  username: "akp-labs",
+  name: "AK Pandey",
+  username: "akpandey-dev",
   orgname: "apt-13",
   cacheTime: 1000 * 60 * 60 * 24 // 24 hours (less API stress)
 };
@@ -217,7 +217,7 @@ async function setupProjects() {
 
   try {
     // local file OR gist URL both work
-    const projects = await safeFetch("https://gist.githubusercontent.com/akp-labs/dfbdbeb26f28fa95ab02bca603d43cd0/raw");
+    const projects = await safeFetch("https://gist.githubusercontent.com/akpandey-dev/dfbdbeb26f28fa95ab02bca603d43cd0/raw");
     if (!Array.isArray(projects)) throw new Error("Invalid project format");
 
     container.innerHTML = "";

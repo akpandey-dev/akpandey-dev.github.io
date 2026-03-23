@@ -1,4 +1,4 @@
-# akp-labs.github.io
+# akpandey-dev.github.io
 
 My personal portfolio site, built to showcase projects, experiments, and tools dynamically using the GitHub API.
 
