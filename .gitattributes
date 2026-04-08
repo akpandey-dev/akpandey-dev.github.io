@@ -1,0 +1,4 @@
+# Ignore archived old versions
+archive/** linguist-detectable=false
+# Ignore auto-generated images
+assets/icons/** linguist-generated
