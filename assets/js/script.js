@@ -1,17 +1,19 @@
 
 
-/* CONFIG */
+//  CONFIG
+
 
 const CONFIG = {
   name: "AK Pandey",
   username: "akpandey-dev",
-  cacheTime: 1000 * 60 * 60 * 24, // 24 hours (less API stress)
+  cacheTime: 1000 * 60 * 60 * 24, // 24 hours (less API stress )
   projectGist:"https://gist.githubusercontent.com/akpandey-dev/dfbdbeb26f28fa95ab02bca603d43cd0/raw",
   contactGist: "https://gist.githubusercontent.com/akpandey-dev/c4a37c78f289e7ea15139c90f3694405/raw"
 };
 
 
-/* UTILITIES */
+//  UTILITIES
+
 
 const $ = id => document.getElementById(id);
 
@@ -62,7 +64,8 @@ function customConfirm(message){
 }
 
 
-/* SIDEBAR + GLOBAL NAVIGATION */
+// SIDEBAR + GLOBAL NAVIGATION
+
 
 function switchSection(targetId) {
   const current = document.querySelector("section.active");
@@ -154,7 +157,8 @@ function syncNavigation() {
   topbarNav.appendChild(themeToggleClone);
 }
 
-/* THEME SETUP AND MANAGEMENT */
+//  THEME SETUP AND MANAGEMENT
+
 
 function toggleTheme() {
   document.body.classList.toggle("light");
@@ -184,7 +188,9 @@ function setupTheme() {
 }
 
 
-/* SAFE FETCH + CACHE */
+//  SAFE FETCH + CACHE
+
+   
 
 async function safeFetch(url) {
   const res = await fetch(url);
@@ -240,9 +246,11 @@ async function cachedFetch(key, url) {
 }
 
 
-/* PROFILE + ABOUT */
+// PROFILE + ABOUT
 
-/*Setup Profile Information*/
+
+//  Setup Profile Information
+
 async function loadProfile() {
   try {
     const data = await cachedFetch(
@@ -264,7 +272,7 @@ async function loadProfile() {
 
 }
 
-/*Setup about section*/
+//  Setup about section
 function aboutContentSetup() {
   const aboutMe = $("about-me");
 
@@ -306,11 +314,26 @@ function aboutContentSetup() {
       </div>
     `;
   }
-  $("github-stats").src =
-    `https://img.shields.io/github/stars/${CONFIG.username}?style=flat&logo=github`;
 
-  $("github-streak").src =
-    `https://github-readme-streak-stats.herokuapp.com/?user=${CONFIG.username}&theme=dark`;
+
+const statsImg = $("github-stats");
+const streakImg = $("github-streak");
+const langsImg = $("github-languages");
+
+statsImg.src =
+  `https://github-readme-stats.vercel.app/api?username=akpandey-dev&show_icons=true&theme=tokyonight&hide_border=true`;
+
+streakImg.src =
+  `https://streak-stats.demolab.com?user=akpandey-dev&theme=tokyonight&hide_border=true`;
+
+streakImg.onerror = () => {
+  streakImg.onerror = null;
+  streakImg.src =
+    `https://github-readme-streak-stats.herokuapp.com/?user=akpandey-dev&theme=dark`;
+};
+
+langsImg.src =
+  `https://github-readme-stats.vercel.app/api/top-langs/?username=akpandey-dev&layout=compact&theme=tokyonight&hide_border=true`;
 }
 
 /* PROJECTS (JSON to UI) */
@@ -340,28 +363,58 @@ async function setupProjects() {
         <h3>${project.name || "Untitled Project"}</h3>
         <p>${project.description || "No description available"}</p>
 
-        ${
-          project.stage
-            ? `<span class="stage">${project.stage}</span>`
-            : ""
-        }
+    <div class="top-meta">
+      ${project.stage ? `<span class="badge">${project.stage}</span>` : ""}
+      ${project.actively_working ? `<span class="badge">Active</span>` : ""}
+      ${project.contributions_welcome ? `<span class="badge">Open</span>` : ""}
+    </div>
 
         <div class="progress-bar">
           <div class="progress-fill" style="width:${progress}%"></div>
         </div>
-
         <small>${progress}% complete (current stage)</small>
-        <small><br>Languages: ${
-          project.languages
-            ? project.languages.join(", ")
-            : "Unknown"
-        }</small>
 
+    <details class="project-details">
+      <summary>More details</summary>
+
+      <div class="details-content">
+        <p><strong>Languages:</strong> ${
+          project.languages ? project.languages.join(", ") : "Unknown"
+        }</p>
+          ${
+          project.tech_stack
+            ? `<p><strong>Tech Stack:</strong> ${project.tech_stack.join(", ")}</p>`
+            : ""}
+          ${
+          project.current_focus
+            ? `<p><strong>Current Focus:</strong> ${project.current_focus}</p>`
+            : ""}
+          ${
+          project.help_areas?.length
+            ? `<p><strong>Help Needed:</strong> ${project.help_areas.join(", ")}</p>`
+            : ""}
+          ${
+          project.planned_features?.length
+            ? `<p><strong>Planned:</strong> ${project.planned_features.join(", ")}</p>`
+            : ""}
+
+  <small>
+  ${
+    project.available_on?.length
+      ? `<strong>Available on:</strong> ` +
+        project.available_on
+          .map(p => `<a href="${p.url}" target="_blank" rel="noopener noreferrer">${p.name}</a>`)
+          .join(", ")
+      : ""
+  }
+</small>
         <p>
           <a href="${project.link}" target="_blank" rel="noopener noreferrer">
-            Check it out...
+            View Project →
           </a>
         </p>
+      </div>
+    </details>
       `;
 
       container.appendChild(card);
@@ -376,7 +429,7 @@ async function setupProjects() {
 }
 
 
-/* REPOSITORIES */
+// REPOSITORIES
 
 function sortRepos(repos) {
   const special = [
@@ -447,9 +500,10 @@ async function loadRepos() {
   }
 }
 
-/* CONTACT INFORMATION AND FORM SETUP */
+// CONTACT INFORMATION AND FORM SETUP
 
-/*Contact Information Setup*/
+
+// Contact info seup
 async function loadContact() {
   const container = $("contact-information");
 
@@ -505,7 +559,7 @@ async function loadContact() {
   }
 }
 
-/*Contact Form setup*/
+// Contact Form setup
 function setupForm() {
   const form = $("form");
   if (!form) return;
@@ -567,7 +621,7 @@ function setupForm() {
 }
 
 
-/* INIT -> FUNCTION INVOCATIONS */
+// INIT -> FUNCTION INVOCATIONS
 
 function init() {
   setYear();

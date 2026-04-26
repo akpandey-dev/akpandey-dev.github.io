@@ -367,7 +367,7 @@ font-weight:bold;
 }
 
 
-.stage{
+.badge{
   display:inline-block;
   margin-top:10px;
   padding:4px 10px;
@@ -393,15 +393,28 @@ font-weight:bold;
   transition: width 0.4s ease;
 }
 
-/* ABOUT */
-#github-stats,#github-streak{
-max-width:100%;
-height:auto;
-border-radius:12px;
-transition: transform 0.3s ease;
+.project-details summary {
+  cursor: pointer;
+  font-weight: bold;
+  margin-top: 8px;
 }
 
-.github-stats-container,.github-streak-container{
+.details-content {
+  margin-top: 8px;
+  opacity: 0.9;
+  font-size: 14px;
+}
+
+/* ABOUT */
+.github-img{
+max-width:100%;
+max-height:100%;
+border-radius:12px;
+transition: transform 0.3s ease;
+object-fit: contain; 
+}
+
+.github-img-container{
 margin-top:20px;
 text-align:center;
 display: flex;
@@ -412,7 +425,7 @@ width: 100%;
 transition: transform 0.3s ease;
 }
 
-#github-stats:hover,#github-streak:hover{
+.github-img:hover{
 transform: translateY(-5px);
 box-shadow: 0 4px 12px var(--shadow);
 }
