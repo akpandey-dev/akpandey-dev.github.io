@@ -70,9 +70,10 @@
 
 <div class="app">
 
+
 <!-- SIDEBAR -->
 <div class="sidebar" id="sidebar">
-<h2 class="name-holder">AK Pandey</h2>
+<h2 class="name">AK Pandey</h2>
 
 <a data-page="home">Home</a>
 <a data-page="projects">Projects</a>
@@ -80,13 +81,20 @@
 <a data-page="about">About</a>
 <a data-page="contact">Contact</a>
 
-<hr style="margin:20px 0;border-color:var(--border)">
+<hr class="hr">
 
 <a id="theme-toggle" data-action="theme-toggle">Toggle Theme</a>
 </div>
 
+<header>
+<div class="topbar">
+<strong><span class="name">AK Pandey</span></strong>
+  <div id="topbar-nav"></div>
+</div>
+</header>
+
 <!-- MAIN -->
-<div class="main">
+<main>
 
   
 <!-- MY CUSTOM POPUP -->
@@ -107,82 +115,124 @@
     <div class="bar c"></div>
 </div>
 
-<header>
-<div class="topbar">
-<strong><span class="name-holder">AK's</span> Portfolio</strong>
-  <div id="topbar-nav"></div>
-</div>
-</header>
-
 <div class="container">
 
 
-<section id="home" class="active">
-<div class="profile">
-<img id="avatar" alt="AK Pandey Avatar">
-<h1 class="name-holder">AK Pandey</h1><br>
-<p class="tagline">
-  Developer • Security Enthusiast • Creator
-</p>
-<p class="subtagline">
-  I build tools, explore systems, and learn how things work under the hood.
-</p><br>
-<div id="bio"></div>
-<br>
-<p>Github:</p>
-<p id="stats"></p>
+<section id="home" class="home-page active">
+<div class="section-container" id="home-content">
+
+  <div id="home-hero">
+    <img id="hero-avatar" class="hero-avatar" alt="AK Pandey Avatar">
+    <div class="hero-content">
+      <h1 class="hero-title">Hi, I'm <br>
+        <span class="name">AK Pandey</span>
+      </h1>
+      <p class="hero-badge">
+        Developer • Security Enthusiast • Creator
+      </p>
+      <p class="hero-tagline">
+        I build tools, explore systems, and learn how things work under the hood. Welcome to my personal developer space.
+      </p>
+    </div>
+  </div>
+
 </div>
 </section>
 
 
 
-<section id="projects">
-  <h2>Projects</h2>
-  <br>
-  <h3>Projects I'm working on or will be working on soon and that are open source:</h3>
+<section id="projects" class="projects-page">
+<div class="section-container" id="projects-content">
+
+  <div class="projects-header">
+    <h2>Projects</h2>
+    <p>Here are some of the projects I've been working on or will be working on soon.</p>
+    <hr>
+  </div>
+  
 
   <!-- grid container -->
-  <div id="projects-container" class="project-grid">
-    <div class="project-card">Loading projects...</div>
+  <div id="projects-container" class="projects-grid">
+    <article class="project-card">Loading projects...</article>
   </div>
-</section>
 
-
-
-<section id="repos">
-<h2>GitHub Repositories</h2>
-<div id="repo-container" class="repo-grid">Loading...</div>
-<div class="gist-reference">
-  <a id="gist-link" target="_blank" rel="noopener noreferrer">
-    <p>Also check out my GitHub Gists for smaller code snippets and experiments!</p>
-    </a>
 </div>
 </section>
 
 
 
-<section id="about">
-<h2>About Me</h2>
-<p class="paragraph" id="about-me">
-Loading...
-</p>
-<br>
-<h3>GitHub Stats:</h3>
-<div class="github-img-container"><img alt="GitHub Stars" class="github-img" id="github-stats" loading="lazy"></div>
-<div class="github-img-container"><img alt="GitHub Streak" class="github-img" id="github-streak" loading="lazy"></div>
-<div class="github-img-container"><img alt="GitHub Languages" class="github-img" id="github-languages" loading="lazy"></div>
+<section id="repos" class="repos-page">
+<div class="section-container" id="repos-content">
+
+    <div class="section-header repos-header">
+      <h2>Repositories</h2>
+      <p>Open-source projects, experiments and development work.</p>
+      <hr>
+    </div>        
+<div id="repos-container" class="repos-grid">Loading...</div>
+
+
+<div class="gist-reference">
+  <a id="gist-link" target="_blank" rel="noopener noreferrer">Also check out my GitHub Gists for smaller code snippets and experiments!</a>
+</div>
+
+</div>
 </section>
 
 
 
-<section id="contact">
-<h2>Contact Information</h2>
+<section id="about" class="about-page">
+<div class="section-container" id="about-content">
+
+<div class="about-me">
+  <div class="section-header about-header">
+    <h2>About Me</h2>
+    <p>A little about me, what I do, and what I'm interested in.</p>
+    <hr>
+  </div>
+
+  <p class="about-description" id="about-description">
+  </p>
+</div>
+
+
+<div class="github-stats">
+    <div class="section-header">
+      <h3>GitHub Stats</h3>
+      <p>A snapshot of my activity and development work.</p>
+      <hr>
+    </div>
+  <div class="github-stats-container">
+    <div class="github-img-container"><img alt="GitHub Stars" class="github-img" id="github-stats" loading="lazy"></div>
+    <div class="github-img-container"><img alt="GitHub Streak" class="github-img" id="github-streak" loading="lazy"></div>
+    <div class="github-img-container"><img alt="GitHub Languages" class="github-img" id="github-languages" loading="lazy"></div>
+  </div>
+</div>
+
+</div>
+</section>
+
+
+
+<section id="contact" class="contact-page">
+<div class="section-container" id="contact-content">
+
+<div class="contact-info">
+<div class="section-header contact-info-header">
+  <h2>Find Me Online</h2>
+  <p>Want to connect? You can find me here.</p>
+</div>
 <div id="contact-information">
 Loading...
-</div><br>
+</div>
+</div>
 
 
-<h3>Contact me:</h3><br>
+<div class="contact-form">
+<div class="section-header contact-form-header">
+  <h2>Get In Touch</h2>
+  <p>Have something to say? Send me a message.</p>
+</div>
 
 <form id="form">
   <!-- Web3Forms access key -->
@@ -196,15 +246,20 @@ Loading...
   <!-- status message -->
   <p id="form-status" class="paragraph"></p>
 </form>
+</div>
+
+</div>
 </section>
 
 
 
 </div>
 
-<footer>© <span id="year"></span> <span class="name-holder">AK Pandey</span></footer>
+</main>
 
-</div>
+<footer>© <span id="year"></span> <span class="name">AK Pandey</span></footer>
+
+
 </div>
 
 

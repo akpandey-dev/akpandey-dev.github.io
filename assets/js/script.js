@@ -258,13 +258,7 @@ async function loadProfile() {
       `https://api.github.com/users/${CONFIG.username}`
     );
 
-    $("avatar").src = data.avatar_url;
-    $("bio").textContent = data.bio || "";
-
-    $("stats").textContent =
-      `${data.public_repos} Repositories · ` +
-      `${data.followers} Followers · ` +
-      `${data.following} Following`;
+    $("hero-avatar").src = data.avatar_url;
 
   } catch (err) {
     console.error("Profile load failed:", err);
@@ -274,7 +268,7 @@ async function loadProfile() {
 
 //  Setup about section
 function aboutContentSetup() {
-  const aboutMe = $("about-me");
+  const aboutMe = $("about-description");
 
   if (aboutMe) {
     aboutMe.textContent =`
@@ -290,27 +284,6 @@ function aboutContentSetup() {
       If you have any questions regarding my work or want to send a Pull Request on GitHub, you are more than welcome to do so.
       <br><br>
       <div style="font-style: italic; display: block; text-align: end;">
-        -<span class="name-holder">${CONFIG.name}</span>
-      </div>
-    `;
-
-    aboutMe.innerHTML += `
-      <div style="
-        margin-top:20px;
-        font-size:14px;
-        opacity:0.8;
-        text-align:center;
-        border:1px solid var(--border);
-        padding:10px;
-        border-radius:8px;"
-        onmouseover="this.style.background='var(--border)'"
-        onMouseOut="this.style.background='transparent'">
-
-        <br><br>
-        <h3>Support Me</h3><br>
-        <p>If you like my work, you can support development.</p>
-        <p>Consider starring my repositories you like on GitHub!</p>
-        <br><br>
       </div>
     `;
   }
@@ -356,28 +329,28 @@ async function setupProjects() {
       const progress =
         Math.max(0, Math.min(100, project.progress || 0));
 
-      const card = document.createElement("div");
+      const card = document.createElement("article");
       card.className = "project-card";
 
       card.innerHTML = `
         <h3>${project.name || "Untitled Project"}</h3>
         <p>${project.description || "No description available"}</p>
 
-    <div class="top-meta">
-      ${project.stage ? `<span class="badge">${project.stage}</span>` : ""}
-      ${project.actively_working ? `<span class="badge">Active</span>` : ""}
-      ${project.contributions_welcome ? `<span class="badge">Open</span>` : ""}
+    <div class="project-top-meta">
+      ${project.stage ? `<span class="project-card-badge">${project.stage}</span>` : ""}
+      ${project.actively_working ? `<span class="project-card-badge">Active</span>` : ""}
+      ${project.contributions_welcome ? `<span class="project-card-badge">Open</span>` : ""}
     </div>
 
-        <div class="progress-bar">
-          <div class="progress-fill" style="width:${progress}%"></div>
+        <div class="project-progress-bar">
+          <div class="project-progress-fill" style="width:${progress}%"></div>
         </div>
         <small>${progress}% complete (current stage)</small>
 
     <details class="project-details">
       <summary>More details</summary>
 
-      <div class="details-content">
+      <div class="project-details-content">
         <p><strong>Languages:</strong> ${
           project.languages ? project.languages.join(", ") : "Unknown"
         }</p>
@@ -398,7 +371,9 @@ async function setupProjects() {
             ? `<p><strong>Planned:</strong> ${project.planned_features.join(", ")}</p>`
             : ""}
 
-  <small>
+      <hr>
+  <p class="project-availability">
+  <strong>
   ${
     project.available_on?.length
       ? `<strong>Available on:</strong> ` +
@@ -407,7 +382,8 @@ async function setupProjects() {
           .join(", ")
       : ""
   }
-</small>
+  </strong>
+  </p>
         <p>
           <a href="${project.link}" target="_blank" rel="noopener noreferrer">
             View Project →
@@ -452,7 +428,7 @@ function sortRepos(repos) {
 }
 
 async function loadRepos() {
-  const container = $("repo-container");
+  const container = $("repos-container");
 
   try {
     const repos = await cachedFetch(
